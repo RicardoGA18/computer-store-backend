@@ -1,5 +1,9 @@
-import express from 'express'
+import Server from './config/Server'
 
-const app = express()
+const objServer = new Server()
+objServer.start()
 
-app.listen(8000,()=>console.log('Correcto'))
+export default {
+  app: objServer.app,
+  server: objServer.server,
+}
