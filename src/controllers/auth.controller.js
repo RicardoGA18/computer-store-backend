@@ -42,11 +42,7 @@ export const signIn = async (req,res) => {
   try {
     /* Verifying the user exists */
     const { email , password } = req.body
-    const user = await User.findOne({ email }, {
-      password: 0,
-      createdAt: 0,
-      updatedAt: 0,
-    })
+    const user = await User.findOne({ email })
     if(!user){
       const error = new Error(`There is not a user with the email ${email}`)
       console.log(error)
@@ -73,7 +69,15 @@ export const signIn = async (req,res) => {
     /* Returning the user with the token */
     return res.status(200).json({
       success: true,
-      content: { ...user , token },
+      content: {
+        name: user.name,
+        lastName: user.lastName,
+        email: user.email,
+        avatar: user.avatar,
+        _id: user._id,
+        role: user.role,
+        token
+      },
       message: 'Inicio de sesión exitoso'
     })
   } catch (error) {

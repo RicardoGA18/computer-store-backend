@@ -9,7 +9,7 @@
     "start": "cross-env NODE_ENV=production node ./build/index.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec babel-node ./src/index.js",
     "build": "babel src --out-dir build",
-    "test": "cross-env NODE_ENV=test jest --silent --verbose",
+    "test": "cross-env NODE_ENV=test jest --verbose",
     "test:watch": "yarn test -- --watch"
   },
   "dependencies": {

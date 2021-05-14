@@ -11,13 +11,15 @@ export const initialUsers = [
     lastName: 'asdasd',
     email: 'admin@example.net',
     role: 'admin',
-    password: User.encryptPassword('adminpass123')
+    password: User.encryptPassword('adminpass123'),
+    decodePass: 'adminpass123',
   },
   {
     name: 'user',
     lastName: 'example',
     email: 'user@example.net',
-    password: User.encryptPassword('userpass123')
+    password: User.encryptPassword('userpass123'),
+    decodePass: 'userpass123',
   }
 ]
 
