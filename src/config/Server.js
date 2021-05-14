@@ -7,7 +7,9 @@ import authRoutes from '../routes/auth.routes'
 export default class Server {
   constructor() {
     this.app = express()
-    this.port = process.env.PORT || 8000
+    this.port = process.env.NODE_ENV ==='test'
+      ? process.env.PORT_TEST || 8001
+      : process.env.PORT || 8000
     this.app.use(express.json())
     this.mongo_db_uri = process.env.NODE_ENV === 'test' 
       ? process.env.MONGO_DB_URI_TEST

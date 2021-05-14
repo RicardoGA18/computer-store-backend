@@ -9,6 +9,7 @@ const validateRegistration = async (req,res,next) => {
   const isValidKeys = verifyKeys(req.body,requiredFields)
   if(!isValidKeys.success){
     const error = new Error(`${isValidKeys.key} is a required field`)
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -18,11 +19,13 @@ const validateRegistration = async (req,res,next) => {
   /* Destructuring fields */
   const { name , lastName , avatar , email , password , role } = req.body
   /* Validating the type of the fields */
-  const registrationFields = [name,lastName,avatar,email,password,role]
+  const registrationFields = ['name','lastName','avatar','email','password','role']
+  const registrationValues = [name,lastName,avatar,email,password,role]
   const registrationTypes = ['string','string','string','string','string','string']
-  const isValidTypes = verifyTypes(registrationFields,registrationTypes)
+  const isValidTypes = verifyTypes(registrationValues,registrationTypes,registrationFields)
   if(!isValidTypes.success){
     const error = new Error(`${isValidTypes.field} must be ${isValidTypes.type}`)
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -32,6 +35,7 @@ const validateRegistration = async (req,res,next) => {
   /* Validating the format of the fields */
   if(!isOnlyLetters(name)){
     const error = new Error('The name field is invalid')
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -40,6 +44,7 @@ const validateRegistration = async (req,res,next) => {
   }
   if(!isOnlyLetters(lastName)){
     const error = new Error('The lastName field is invalid')
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -48,6 +53,7 @@ const validateRegistration = async (req,res,next) => {
   }
   if(avatar && !isUrl(avatar)){
     const error = new Error('The avatar field is an invalid url')
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -56,6 +62,7 @@ const validateRegistration = async (req,res,next) => {
   }
   if(!isEmail(email)){
     const error = new Error('The email field is invalid')
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -64,6 +71,7 @@ const validateRegistration = async (req,res,next) => {
   }
   if(password.length < 6){
     const error = new Error('The password must be at least 6 characters long')
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -72,6 +80,7 @@ const validateRegistration = async (req,res,next) => {
   }
   if(role && !(role === 'admin' || role === 'user')){
     const error = new Error(`${role} role doesn't exists`)
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -83,7 +92,8 @@ const validateRegistration = async (req,res,next) => {
     const matchEmail = await User.findOne({email})
     if(matchEmail){
       const error = new Error(`${email} email already exists. The email must be unique`)
-      return res.status(400).json({
+      console.log(error)
+      return res.status(409).json({
         success: false,
         content: error.toString(),
         message: `El email ${email} ya existe`
@@ -92,6 +102,7 @@ const validateRegistration = async (req,res,next) => {
     next()
     return
   } catch (error) {
+    console.log(error)
     return res.status(500).json({
       success: false,
       content: error.toString(),

@@ -1,20 +1,5 @@
 import { Schema } from 'mongoose'
 
-const PurchaseSchema = new Schema({
-  totalAmount: {
-    type: Number,
-    required: true,
-    min: 0,
-  },
-  products: [PurchaseProductSchema],
-},{
-  timestamps: {
-    createdAt: true,
-    updatedAt: false,
-  },
-  versionKey: false,
-})
-
 const PurchaseProductSchema = new Schema({
   _id:{
     type: Schema.Types.ObjectId,
@@ -23,7 +8,6 @@ const PurchaseProductSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   img: {
     type: String,
@@ -49,6 +33,21 @@ const PurchaseProductSchema = new Schema({
   timestamps: false,
   versionKey: false,
   _id: false,
+})
+
+const PurchaseSchema = new Schema({
+  totalAmount: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  products: [PurchaseProductSchema],
+},{
+  timestamps: {
+    createdAt: true,
+    updatedAt: false,
+  },
+  versionKey: false,
 })
 
 export default PurchaseSchema

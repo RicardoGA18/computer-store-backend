@@ -18,9 +18,10 @@ const validateCategory = async (req,res,next) => {
   /* Destructuring fields */
   const { name , img } = req.body
   /* Validating the type of the fields */
-  const categoryFields = [name,img]
+  const categoryFields = ['name','img']
+  const categoryValues = [name,img]
   const categoryTypes = ['string','string']
-  const isValidTypes = verifyTypes(categoryFields,categoryTypes)
+  const isValidTypes = verifyTypes(categoryValues,categoryTypes,categoryFields)
   if(!isValidTypes.success){
     const error = new Error(`${isValidTypes.field} must be ${isValidTypes.type}`)
     return res.status(400).json({

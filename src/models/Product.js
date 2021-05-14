@@ -1,5 +1,20 @@
 import { Schema } from 'mongoose'
 
+const ProductDetailSchema = new Schema({
+  key: {
+    type: String,
+    required: true,
+  },
+  value: {
+    type: String,
+    required: true,
+  }
+},{
+  timestamps: false,
+  versionKey: false,
+  _id: false,
+})
+
 const ProductSchema = new Schema({
   name: {
     type: String,
@@ -42,21 +57,6 @@ const ProductSchema = new Schema({
 },{
   timestamps: true,
   versionKey: false,
-})
-
-const ProductDetailSchema = new Schema({
-  key: {
-    type: String,
-    required: true,
-  },
-  value: {
-    type: String,
-    required: true,
-  }
-},{
-  timestamps: false,
-  versionKey: false,
-  _id: false,
 })
 
 export default ProductSchema

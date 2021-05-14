@@ -1,8 +1,8 @@
 /* Function to verify the types of the fields  */
-const verifyTypes = (fields,types) => {
-  for(let i = 0; i < fields.length; i++){
-    if(fields[i]){
-      if(typeof fields[i] !== types[i]){
+const verifyTypes = (values,types,fields) => {
+  for(let i = 0; i < values.length; i++){
+    if(values[i]){
+      if(typeof values[i] !== types[i]){
         return {
           success: false,
           field: fields[i],
