@@ -4,13 +4,15 @@ import { connection } from 'mongoose'
 import { api , initialUsers , getUsersContent , exampleUser } from '../helpers' 
 
 describe('/api/auth/sign-up', () => {
-  beforeAll(async () => {
-    await Promise.all(initialUsers.map((initialUser)=>{
-      User.create(initialUser)
-    }))
+  beforeEach(async () => {
+    await User.deleteMany({})
+    for(let initialUser of initialUsers){
+      const initialUserObject = new User(initialUser)
+      await initialUserObject.save()
+    }
   })
-describe('Validate token', ()=>{
-  it('Creating a user successfully and receive a token', async () => {
+
+  test('Creating a user successfully and receive a token', async () => {
     /* Getting users at init */
     const usersAtStart = await getUsersContent()
 
@@ -29,17 +31,15 @@ describe('Validate token', ()=>{
     const usersAtEnd = await getUsersContent()
 
     /* Checking there is a new User */
-    expect(usersAtEnd).toHaveLength(usersAtStart.length + 3)
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
 
     /* Checking the email of the new user is in the database */
     const emails = usersAtEnd.map(user => user.email)
     expect(emails).toContain(exampleUser.email)
   })
 
-})
-
   describe('User without a required field is not added', () => {
-    it('without name', async () => {
+    test('without name', async () => {
       /* Making the request without name */
       const response = await api
         .post('/api/auth/sign-up')
@@ -50,7 +50,7 @@ describe('Validate token', ()=>{
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toMatch(/campo.*requerido/)
     })
-    it('without lastName', async () => {
+    test('without lastName', async () => {
       /* Making the request without name */
       const response = await api
         .post('/api/auth/sign-up')
@@ -61,7 +61,7 @@ describe('Validate token', ()=>{
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toMatch(/campo.*requerido/)
     })
-    it('without email', async () => {
+    test('without email', async () => {
       /* Making the request without name */
       const response = await api
         .post('/api/auth/sign-up')
@@ -72,7 +72,7 @@ describe('Validate token', ()=>{
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toMatch(/campo.*requerido/)
     })
-    it('without password', async () => {
+    test('without password', async () => {
       /* Making the request without name */
       const response = await api
         .post('/api/auth/sign-up')
@@ -86,7 +86,7 @@ describe('Validate token', ()=>{
   })
   
   describe('User with an invalid field is not added',() => {
-    it('invalid name', async () => {
+    test('invalid name', async () => {
       /* Making the request with an invalid name */
       const response = await api
         .post('/api/auth/sign-up')
@@ -97,7 +97,7 @@ describe('Validate token', ()=>{
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toBe('El campo name debe ser string')
     })
-    it('invalid lastName', async () => {
+    test('invalid lastName', async () => {
       /* Making the request with an invalid lastName */
       const response = await api
         .post('/api/auth/sign-up')
@@ -108,7 +108,7 @@ describe('Validate token', ()=>{
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toBe('El apellido es inválido')
     })
-    it('invalid email', async () => {
+    test('invalid email', async () => {
       /* Making the request with an invalid email */
       const response = await api
         .post('/api/auth/sign-up')
@@ -119,7 +119,7 @@ describe('Validate token', ()=>{
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toBe('El email es inválido')
     })
-    it('invalid password', async () => {
+    test('invalid password', async () => {
       /* Making the request with an invalid password */
       const response = await api
         .post('/api/auth/sign-up')
@@ -130,7 +130,7 @@ describe('Validate token', ()=>{
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toBe('La contraseña debe tener 6 caracteres como mínimo')
     })
-    it('invalid url avatar', async () => {
+    test('invalid url avatar', async () => {
       /* Making the request with an invalid url avatar */
       const response = await api
         .post('/api/auth/sign-up')
@@ -141,7 +141,7 @@ describe('Validate token', ()=>{
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toBe('La URL del avatar es inválida')
     })
-    it('invalid role', async () => {
+    test('invalid role', async () => {
       /* Making the request with an invalid role */
       const response = await api
         .post('/api/auth/sign-up')
@@ -153,23 +153,20 @@ describe('Validate token', ()=>{
       expect(response.body.message).toBe('EL rol moderator no existe')
     })
   })
-  describe('Validate user',()=>{
-    it('User with an existing email is not added', async () => {
-      const response = await api
-        .post('/api/auth/sign-up')
-        .send({...exampleUser , email: initialUsers[0].email})
-        .expect(409)
-        .expect('Content-Type', /application\/json/)
   
-      expect(response.body.success).toBeFalsy()
-      expect(response.body.message).toBe(`El email ${initialUsers[0].email} ya existe`)
-    })
+  test('User with an existing email is not added', async () => {
+    const response = await api
+      .post('/api/auth/sign-up')
+      .send({...exampleUser , email: initialUsers[0].email})
+      .expect(409)
+      .expect('Content-Type', /application\/json/)
 
+    expect(response.body.success).toBeFalsy()
+    expect(response.body.message).toBe(`El email ${initialUsers[0].email} ya existe`)
   })
 
-  afterAll(async () => {
-    await User.deleteMany()
-    await connection.close()
+  afterAll(() => {
+    connection.close()
     server.close()
   })
 })
