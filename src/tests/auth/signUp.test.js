@@ -165,8 +165,8 @@ describe('/api/auth/sign-up', () => {
     expect(response.body.message).toBe(`El email ${initialUsers[0].email} ya existe`)
   })
 
-  afterAll(() => {
-    connection.close()
+  afterAll(async () => {
+    await connection.close()
     server.close()
   })
 })

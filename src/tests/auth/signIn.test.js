@@ -1,7 +1,7 @@
 import User from '../../models/User'
 import { server } from '../../index'
 import { connection } from 'mongoose'
-import { api , initialUsers , getUsersContent } from '../helpers'
+import { api , initialUsers } from '../helpers'
 
 describe('/api/auth/sign-in', () => {
   beforeEach(async () => {
@@ -123,8 +123,8 @@ describe('/api/auth/sign-in', () => {
     expect(response.body.message).toBe('Contraseña incorrecta')
   })
 
-  afterAll(() => {
-    connection.close()
+  afterAll(async () => {
+    await connection.close()
     server.close()
   })
 })
