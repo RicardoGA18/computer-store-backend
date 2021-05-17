@@ -1,5 +1,7 @@
 import express from 'express'
 import { connect } from 'mongoose'
+import swaggerUi from 'swagger-ui-express'
+import swaggerDoc from './swagger.json'
 /* Configure dotenv only for development and test environment */
 if(process.env.NODE_ENV !== 'production'){
   require('dotenv').config()
@@ -24,6 +26,7 @@ export default class Server {
       this.app.use(require('morgan')('dev'))
     }
     this.routes()
+    this.swagger()
   }
   start() {
     this.server = this.app.listen(this.port, async () => {
@@ -40,6 +43,9 @@ export default class Server {
         console.log(error)
       }
     })
+  }
+  swagger(){
+    this.app.use('/api/docs',swaggerUi.serve,swaggerUi.setup(swaggerDoc))
   }
   routes(){
     this.app.use('/api/auth',authRoutes)

@@ -22,6 +22,8 @@ describe('/api/auth/sign-up', () => {
       .send(exampleUser)
       .expect(201)
       .expect('Content-Type', /application\/json/)
+    
+    console.log(response.body.content)
 
     /* Checking success is true and token exists */
     expect(response.body.success).toBeTruthy()

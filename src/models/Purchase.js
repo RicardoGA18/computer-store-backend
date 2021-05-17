@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose'
 
 const PurchaseProductSchema = new Schema({
-  _id:{
+  _id: {
     type: Schema.Types.ObjectId,
     required: true,
   },
