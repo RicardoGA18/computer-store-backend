@@ -1,19 +1,28 @@
 import express from 'express'
 import { connect } from 'mongoose'
-require('dotenv').config()
+/* Configure dotenv only for development and test environment */
+if(process.env.NODE_ENV !== 'production'){
+  require('dotenv').config()
+}
 /* Routes imports */
 import authRoutes from '../routes/auth.routes'
 
 export default class Server {
   constructor() {
+    /* Basic configuration */
     this.app = express()
+    this.app.use(express.json())
     this.port = process.env.NODE_ENV ==='test'
       ? process.env.PORT_TEST || 8001
       : process.env.PORT || 8000
-    this.app.use(express.json())
+    /* Database */
     this.mongo_db_uri = process.env.NODE_ENV === 'test' 
       ? process.env.MONGO_DB_URI_TEST
-      : process.env.MONGO_DB_URI 
+      : process.env.MONGO_DB_URI
+    /* Complement config */
+    if(process.env.NODE_ENV === 'development'){
+      this.app.use(require('morgan')('dev'))
+    }
     this.routes()
   }
   start() {

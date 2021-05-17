@@ -12,7 +12,7 @@ describe('/api/auth/sign-up', () => {
     }
   })
 
-  test('Creating a user successfully and receive a token', async () => {
+  test('Creating a user successfully, receive a token and dont receive the password', async () => {
     /* Getting users at init */
     const usersAtStart = await getUsersContent()
 
@@ -26,6 +26,7 @@ describe('/api/auth/sign-up', () => {
     /* Checking success is true and token exists */
     expect(response.body.success).toBeTruthy()
     expect(response.body.content.token).toBeDefined()
+    expect(response.body.content.password).toBeUndefined()
 
     /* Getting users at end */
     const usersAtEnd = await getUsersContent()
@@ -129,28 +130,6 @@ describe('/api/auth/sign-up', () => {
       
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toBe('La contraseña debe tener 6 caracteres como mínimo')
-    })
-    test('invalid url avatar', async () => {
-      /* Making the request with an invalid url avatar */
-      const response = await api
-        .post('/api/auth/sign-up')
-        .send({...exampleUser , avatar: 'google.com'})
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-      
-      expect(response.body.success).toBeFalsy()
-      expect(response.body.message).toBe('La URL del avatar es inválida')
-    })
-    test('invalid role', async () => {
-      /* Making the request with an invalid role */
-      const response = await api
-        .post('/api/auth/sign-up')
-        .send({...exampleUser , role: 'moderator'})
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-      
-      expect(response.body.success).toBeFalsy()
-      expect(response.body.message).toBe('EL rol moderator no existe')
     })
   })
   

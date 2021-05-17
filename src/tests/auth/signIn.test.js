@@ -12,7 +12,7 @@ describe('/api/auth/sign-in', () => {
     }
   })
 
-  test('User sign in successfully and receive a token', async () => {
+  test('User sign in successfully, receive a token and dont receive the password', async () => {
     /*  User sign in */
     const response = await api
       .post('/api/auth/sign-in')
@@ -26,6 +26,7 @@ describe('/api/auth/sign-in', () => {
     /* Verifiying the response */
     expect(response.body.success).toBeTruthy()
     expect(response.body.content.token).toBeDefined()
+    expect(response.body.content.password).toBeUndefined()
     expect(response.body.content.email).toBe(initialUsers[0].email)
     expect(response.body.message).toBe('Inicio de sesión exitoso')
   })

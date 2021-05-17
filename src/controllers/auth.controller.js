@@ -4,28 +4,22 @@ import jwt from 'jsonwebtoken'
 export const signUp = async (req,res) => {
   try {
     /* Creating User */
-    const { name , lastName , avatar , email , password , role } = req.body
     const newUserinstance = new User({ 
-      name,
-      lastName,
-      email,
-      password: User.encryptPassword(password),
+      ...req.body,
+      password: User.encryptPassword(req.body.password),
     })
-    if(role){
-      newUserinstance.role = role
-    }
-    if(avatar){
-      newUserinstance.avatar = avatar
-    }
     const newUser = await newUserinstance.save()
     /* Generating Token */
     const token = jwt.sign({userId: newUser._id},process.env.JWT_SECRET,{
       expiresIn: 60 * 60 * 24 * 15 // 15 days
     })
+    /* Removing the password */
+    const userToServe = newUser.toJSON()
+    delete userToServe.password
     /* Returning user with token */
     return res.status(201).json({
       success: true,
-      content: { ...newUser , token },
+      content: { ...userToServe , token },
       message: 'Registro exitoso',
     }) 
   } catch (error) {
@@ -66,16 +60,14 @@ export const signIn = async (req,res) => {
     const token = jwt.sign({userId: user._id},process.env.JWT_SECRET,{
       expiresIn: 60 * 60 * 24 * 15 // 15 days
     })
+    /* Removing the password */
+    const userToServe = user.toJSON()
+    delete userToServe.password
     /* Returning the user with the token */
     return res.status(200).json({
       success: true,
       content: {
-        name: user.name,
-        lastName: user.lastName,
-        email: user.email,
-        avatar: user.avatar,
-        _id: user._id,
-        role: user.role,
+        ...userToServe,
         token
       },
       message: 'Inicio de sesión exitoso'

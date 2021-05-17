@@ -17,11 +17,11 @@ const validateRegistration = async (req,res,next) => {
     })
   }
   /* Destructuring fields */
-  const { name , lastName , avatar , email , password , role } = req.body
+  const { name , lastName , email , password } = req.body
   /* Validating the type of the fields */
-  const registrationFields = ['name','lastName','avatar','email','password','role']
-  const registrationValues = [name,lastName,avatar,email,password,role]
-  const registrationTypes = ['string','string','string','string','string','string']
+  const registrationFields = ['name','lastName','email','password']
+  const registrationValues = [name,lastName,email,password]
+  const registrationTypes = ['string','string','string','string']
   const isValidTypes = verifyTypes(registrationValues,registrationTypes,registrationFields)
   if(!isValidTypes.success){
     const error = new Error(`${isValidTypes.field} must be ${isValidTypes.type}`)
@@ -51,15 +51,6 @@ const validateRegistration = async (req,res,next) => {
       message: 'El apellido es inválido'
     })
   }
-  if(avatar && !isUrl(avatar)){
-    const error = new Error('The avatar field is an invalid url')
-    console.log(error)
-    return res.status(400).json({
-      success: false,
-      content: error.toString(),
-      message: 'La URL del avatar es inválida'
-    })
-  }
   if(!isEmail(email)){
     const error = new Error('The email field is invalid')
     console.log(error)
@@ -76,15 +67,6 @@ const validateRegistration = async (req,res,next) => {
       success: false,
       content: error.toString(),
       message: 'La contraseña debe tener 6 caracteres como mínimo'
-    })
-  }
-  if(role && !(role === 'admin' || role === 'user')){
-    const error = new Error(`${role} role doesn't exists`)
-    console.log(error)
-    return res.status(400).json({
-      success: false,
-      content: error.toString(),
-      message: `EL rol ${role} no existe`
     })
   }
   /* Validating unique fields */
