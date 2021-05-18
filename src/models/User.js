@@ -1,5 +1,4 @@
 import { Schema , model } from 'mongoose'
-import PurchaseSchema from './Purchase'
 import { hashSync , compareSync } from 'bcryptjs'
 
 const UserSchema = new Schema({
@@ -28,13 +27,12 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    default: 'user',
+    default: 'client',
     enum: {
-      values: ['user','admin'],
+      values: ['client','admin'],
       message: '{VALUE} is not a valid role',
     },
   },
-  purchases: [PurchaseSchema]
 },{
   timestamps: true,
   versionKey: false,

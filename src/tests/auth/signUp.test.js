@@ -22,13 +22,12 @@ describe('/api/auth/sign-up', () => {
       .send(exampleUser)
       .expect(201)
       .expect('Content-Type', /application\/json/)
-    
-    console.log(response.body.content)
 
     /* Checking success is true and token exists */
     expect(response.body.success).toBeTruthy()
     expect(response.body.content.token).toBeDefined()
     expect(response.body.content.password).toBeUndefined()
+    expect(response.body.content.role).toBe('client')
 
     /* Getting users at end */
     const usersAtEnd = await getUsersContent()

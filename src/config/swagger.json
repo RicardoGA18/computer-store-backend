@@ -17,6 +17,10 @@
     {
       "name": "Auth",
       "description": "Authentication endpoints"
+    },
+    {
+      "name": "Categories",
+      "description": "Endpoints for category CRUD"
     }
   ],
   "paths": {
@@ -147,9 +151,203 @@
           }
         }
       }
+    },
+    "/categories/getAll":{
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get all categories",
+        "operationId": "getCategories",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200":{
+            "description": "Categories obtained successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/category"
+                  }
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/categories/create":{
+      "post":{
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Create a category ( only admin )",
+        "description": "A token is needed to validate that the request is made by an administrator",
+        "operationId": "createCategory",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Category object that will be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCategory"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-access-token",
+            "description": "Json web token",
+            "required": "true",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Category created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "content": {
+                  "$ref": "#/definitions/category"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/categories/getById/{categoryId}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get a category by id",
+        "operationId": "getCategory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Id of the category that will be obtained",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category obtained successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "content": {
+                  "$ref": "#/definitions/category"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "category": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "img": {
+          "type": "string",
+          "format": "url"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "postCategory": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "userLogged": {
       "type": "object",
       "properties": {
@@ -159,7 +357,7 @@
         },
         "token": {
           "type": "string",
-          "format": "token"
+          "format": "json web token"
         },
         "name": {
           "type": "string"
@@ -176,7 +374,9 @@
           "format": "email"
         },
         "role": {
-          "type": "string"
+          "type": "string",
+          "enum": ["client","admin"],
+          "default": "user"
         },
         "createdAt": {
           "type": "string",
@@ -190,36 +390,34 @@
     },
     "registerObject": {
       "type": "object",
+      "required": ["name","lastName","email","password"],
       "properties": {
         "name": {
-          "type": "string",
-          "required": true
+          "type": "string"
         },
         "lastName": {
-          "type": "string",
-          "required": true
+          "type": "string"
         },
         "email": {
           "type": "string",
-          "required": true
+          "format": "email"
         },
         "password": {
           "type": "string",
-          "required": true,
           "format": "password"
         }
       }
     },
     "loginObject": {
       "type": "object",
+      "required": ["email","password"],
       "properties": {
         "email": {
           "type": "string",
-          "required": true
+          "format": "email"
         },
         "password": {
           "type": "string",
-          "required": true,
           "format": "password"
         }
       }

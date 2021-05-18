@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { Schema , model } from 'mongoose'
 
 const PurchaseProductSchema = new Schema({
   _id: {
@@ -36,6 +36,10 @@ const PurchaseProductSchema = new Schema({
 })
 
 const PurchaseSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
   totalAmount: {
     type: Number,
     required: true,
@@ -50,4 +54,4 @@ const PurchaseSchema = new Schema({
   versionKey: false,
 })
 
-export default PurchaseSchema
+export default model('Purchase', PurchaseSchema)

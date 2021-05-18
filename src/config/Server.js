@@ -8,6 +8,7 @@ if(process.env.NODE_ENV !== 'production'){
 }
 /* Routes imports */
 import authRoutes from '../routes/auth.routes'
+import categoryRoutes from '../routes/categories.routes'
 
 export default class Server {
   constructor() {
@@ -48,6 +49,7 @@ export default class Server {
     this.app.use('/api/docs',swaggerUi.serve,swaggerUi.setup(swaggerDoc))
   }
   routes(){
-    this.app.use('/api/auth',authRoutes)
+    this.app.use('/api/auth', authRoutes)
+    this.app.use('/api/categories', categoryRoutes)
   }
 }

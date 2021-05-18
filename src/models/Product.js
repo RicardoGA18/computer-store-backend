@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { Schema , model } from 'mongoose'
 
 const ProductDetailSchema = new Schema({
   key: {
@@ -16,10 +16,13 @@ const ProductDetailSchema = new Schema({
 })
 
 const ProductSchema = new Schema({
+  categoryId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   description:{
     type: String,
@@ -29,7 +32,7 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
-  oficialInformation: {
+  officialInformation: {
     type: String,
     required: true,
   },
@@ -53,10 +56,13 @@ const ProductSchema = new Schema({
     type: [String],
     required: true,
   },
-  details: [ProductDetailSchema],
+  details: {
+    type: [ProductDetailSchema],
+    required: true,
+  },
 },{
   timestamps: true,
   versionKey: false,
 })
 
-export default ProductSchema
+export default model('Product',ProductSchema)

@@ -1,14 +1,14 @@
 import verifyKeys from '../../utils/verifyKeys'
 import verifyTypes from '../../utils/verifyTypes'
-import { isUrl } from '../../utils/regexValidations'
 import Category from '../../models/Category'
 
 const validateCategory = async (req,res,next) => {
   /* Verifying that the req.body contains the required fields */
-  const requiredFields = ['img','name']
+  const requiredFields = ['name']
   const isValidKeys = verifyKeys(req.body,requiredFields)
   if(!isValidKeys.success){
     const error = new Error(`${isValidKeys.key} is a required field`)
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -16,11 +16,11 @@ const validateCategory = async (req,res,next) => {
     })
   }
   /* Destructuring fields */
-  const { name , img } = req.body
+  const { name } = req.body
   /* Validating the type of the fields */
-  const categoryFields = ['name','img']
-  const categoryValues = [name,img]
-  const categoryTypes = ['string','string']
+  const categoryFields = ['name']
+  const categoryValues = [name]
+  const categoryTypes = ['string']
   const isValidTypes = verifyTypes(categoryValues,categoryTypes,categoryFields)
   if(!isValidTypes.success){
     const error = new Error(`${isValidTypes.field} must be ${isValidTypes.type}`)
@@ -28,15 +28,6 @@ const validateCategory = async (req,res,next) => {
       success: false,
       content: error.toString(),
       message: `El campo ${isValidTypes.field} debe ser ${isValidTypes.type}`
-    })
-  }
-  /* Validating the format of the fields */
-  if(!isUrl(img)){
-    const error = new Error('The img field is an invalid url')
-    return res.status(400).json({
-      success: false,
-      content: error.toString(),
-      message: 'La URL de la imagen es inválida'
     })
   }
   /* Validating unique fields */
