@@ -8,7 +8,7 @@ const isAdmin = async (req,res,next) => {
     if(!token){
       const error = new Error('No token received')
       console.log(error)
-      return res.status(400).json({
+      return res.status(403).json({
         success: false,
         content: error.toString(),
         message: 'No se recibió el token de acceso'
@@ -21,7 +21,7 @@ const isAdmin = async (req,res,next) => {
     if(!user){
       const error = new Error('Token with a non-existent user')
       console.log(error)
-      return res.status(404).json({
+      return res.status(403).json({
         success: false,
         content: error.toString(),
         message: 'Token de acceso con usuario no existente'

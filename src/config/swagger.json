@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Backend with express, mongodb and mercadopago for Computer Store ecommerce.",
+    "description": "Backend with Express, MongoDB and MercadoPago for Computer Store ecommerce.",
     "version": "1.0.0",
     "title": "Computer Store",
     "contact": {
@@ -41,7 +41,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "User object that needs to be register",
+            "description": "User object that will be registered",
             "required": true,
             "schema": {
               "$ref": "#/definitions/registerObject"
@@ -99,7 +99,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "User object that needs to log in",
+            "description": "User object that will log in",
             "required": true,
             "schema": {
               "$ref": "#/definitions/loginObject"
@@ -250,6 +250,18 @@
               "$ref": "#/definitions/error"
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "403": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
           "500": {
             "description": "Internal server error",
             "schema": {
@@ -294,6 +306,175 @@
                   "type": "string"
                 }
               }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/categories/updateById/{categoryId}": {
+      "put": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Update a category by id ( only admin )",
+        "description": "A token is needed to validate that the request is made by an administrator",
+        "operationId": "updateCategory",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Category object that will be updated",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postCategory"
+            }
+          },
+          {
+            "in": "header",
+            "name": "x-access-token",
+            "description": "Json web token",
+            "required": "true",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Id of the category that will be updated",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "content": {
+                  "$ref": "#/definitions/category"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "403": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/categories/deleteById/{categoryId}": {
+      "delete": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Delete a category by id ( only admin )",
+        "description": "A token is needed to validate that the request is made by an administrator",
+        "operationId": "deleteCategory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "x-access-token",
+            "description": "Json web token",
+            "required": "true",
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Id of the category that will be deleted",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "content": {
+                  "type": "object",
+                  "default": null
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          },
+          "403": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/error"
             }
           },
           "404": {

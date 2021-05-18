@@ -40,7 +40,7 @@ describe('/api/categories/create', () => {
     expect(response.body.success).toBeTruthy()
     expect(response.body.content.img).toBe('https://firebasestorage.googleapis.com/v0/b/computer-store-a1f8e.appspot.com/o/assets%2FGroup%202.png?alt=media&token=0c75a57c-5005-4efb-b4e8-82a69b5c8849')
     expect(response.body.content.name).toBe('category example')
-    expect(response.body.message).toBe('Categoria creada exitosamente.')
+    expect(response.body.message).toBe('Categoría creada exitosamente')
   })
 
   describe('User can not create a category with an invalid token', () => {
@@ -49,7 +49,7 @@ describe('/api/categories/create', () => {
       const response = await api
         .post('/api/categories/create')
         .send({name: 'category example'})
-        .expect(400)
+        .expect(403)
         .expect('Content-Type', /application\/json/)
 
       /* Checking the reponse */
@@ -68,6 +68,7 @@ describe('/api/categories/create', () => {
         .expect(401)
         .expect('Content-Type', /application\/json/)
 
+      /* Checking the response */
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toBe('Sesión expirada')
     })

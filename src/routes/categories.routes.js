@@ -24,4 +24,16 @@ router.get(
   categoryController.getCategoryById
 )
 
+router.put(
+  '/updateById/:categoryId',
+  [ isAdmin , validateCategory ],
+  categoryController.updateCategoryById
+)
+
+router.delete(
+  '/deleteById/:categoryId',
+  isAdmin,
+  categoryController.deleteCategoryById
+)
+
 export default router
