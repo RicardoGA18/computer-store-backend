@@ -2,7 +2,16 @@
 const verifyTypes = (values,types,fields) => {
   for(let i = 0; i < values.length; i++){
     if(values[i]){
-      if(typeof values[i] !== types[i]){
+      if(types[i] === 'array'){
+        if(!(values[i] instanceof Array)){
+          return {
+            success: false,
+            field: fields[i],
+            type: types[i]
+          }
+        }
+      }
+      else if(typeof values[i] !== types[i]){
         return {
           success: false,
           field: fields[i],

@@ -1,6 +1,6 @@
 import verifyKeys from '../../utils/verifyKeys'
 import verifyTypes from '../../utils/verifyTypes'
-import { isUrl , isOnlyLetters , isEmail } from '../../utils/regexValidations'
+import { isOnlyLetters , isEmail } from '../../utils/regexValidations'
 import User from '../../models/User'
 
 const validateRegistration = async (req,res,next) => {

@@ -2,8 +2,11 @@ import Product from '../models/Product'
 
 export const createProduct = async (req, res) => {
   try {
-    const { categoryId, name , description , officialInformation , price , discount , stock , details  } = req.body
-    const newProductInstance = new Product({ categoryId, name , description , officialInformation , price , discount , stock , details })
+    const { categoryId , name , description , officialInformation , price , discount , stock , details  } = req.body
+    const newProductInstance = new Product({ categoryId , name , description , officialInformation , price , stock , details })
+    if(discount){
+      newProductInstance.discount = discount
+    }
     const newProduct = await newProductInstance.save()
     return res.status(201).json({
       success: true,

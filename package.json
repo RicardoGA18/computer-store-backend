@@ -11,8 +11,8 @@
     "clean": "rm -rf build",
     "build": "yarn clean && babel src --out-dir build",
     "test": "cross-env NODE_ENV=test jest --verbose --forceExit --maxWorkers=1",
-    "test:silent": "yarn test -- --silent",
-    "test:watch": "yarn test -- --watch"
+    "test:silent": "yarn test --silent",
+    "test:watch": "yarn test --watch"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.8.5",

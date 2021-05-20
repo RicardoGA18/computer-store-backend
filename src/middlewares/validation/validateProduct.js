@@ -1,7 +1,9 @@
 import verifykeys from '../../utils/verifyKeys'
 import verifyTypes from '../../utils/verifyTypes'
+import verifyDetails from '../../utils/verifyDetails'
 import { isUrl } from '../../utils/regexValidations'
 import Product from '../../models/Product'
+import Category from '../../models/Category'
 
 const validateProduct = async (req, res, next) => {
   /* Checking that the req.body contains the required fields */
@@ -17,13 +19,14 @@ const validateProduct = async (req, res, next) => {
     })
   }
   /* Checking the types of the fields */
-  const { categoryId, name, description , officialInformation , price , discount , stock , details } = req.body
+  const { categoryId , name , description , officialInformation , price , discount , stock , details } = req.body
   const productFields = ['categoryId','name','description','officialInformation','discount','price','stock','details']
   const productValues = [categoryId,name,description,officialInformation,discount,price,stock,details]
-  const productTypes = ['integer','string','string','string','number','number','number','object']
+  const productTypes = ['string','string','string','string','number','number','number','array']
   const isValidTypes = verifyTypes(productValues,productTypes,productFields)
   if(!isValidTypes.success){
     const error = new Error(`${isValidTypes.field} must be ${isValidTypes.type}`)
+    console.log(error)
     return res.status(400).json({
       success: false,
       content: error.toString(),
@@ -85,11 +88,63 @@ const validateProduct = async (req, res, next) => {
       message: 'El stock debe ser al menos 1'
     })
   }
-  /* Checking unique fields */
+  const isValidDetails = verifyDetails(details)
+  if(!isValidDetails.success){
+    let errorMessage , error
+    if(isValidDetails.typeError === 'no received'){
+      errorMessage = 'El campo details es requerido'
+      error = new Error('The details field is a required field')
+    }
+    else if(isValidDetails.typeError === 'invalid'){
+      errorMessage = 'Detalles inválidos'
+      error = new Error('Invalid Details')
+    }
+    console.log(error)
+    return res.status(400).json({
+      success: false,
+      content: error.toString(),
+      message: errorMessage
+    })
+  }
   try {
-    
+    /* Checking the categoryId */
+    const matchCategory = await Category.findById(categoryId)
+    if(!matchCategory){
+      const error = new Error('Id of non-existent category')
+      console.log(error)
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: 'Id de categoría no existente'
+      })
+    }
+    /* Checking unique fields */
+    const matchName = await Product.findOne({name})
+    if(matchName){
+      const error = new Error('The product already exists')
+      console.log(error)
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: `El producto ${name} ya existe`
+      })
+    }
+    next()
+    return
   } catch (error) {
-    
+    console.log(error)
+    if(error.path === '_id'){
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: 'Id de categoría inválido'
+      })
+    }
+    return res.status(500).json({
+      success: false,
+      content: error.toString(),
+      message: 'Error interno al validar producto'
+    })
   }
 }
 

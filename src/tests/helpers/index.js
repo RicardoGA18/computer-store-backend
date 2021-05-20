@@ -2,6 +2,7 @@ import { app } from '../../index'
 import supertest from 'supertest'
 import User from '../../models/User'
 import Category from '../../models/Category'
+import Product from '../../models/Product'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -103,4 +104,13 @@ export const getCategoriesContent = async () => {
   const categories = await Category.find({})
   const allCategories = categories.map(category => category.toJSON())
   return allCategories
+}
+
+/* Products */
+export { initialProducts , productExample , invalidKeyValueProduct } from  './initialProducts'
+
+export const getProductsContent = async () => {
+  const products = await Product.find({}).populate('details')
+  const allProducts = products.map(product => product.toJSON())
+  return allProducts
 }

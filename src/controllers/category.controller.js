@@ -194,7 +194,6 @@ export const uploadPhotoById = async (req,res) => {
     oldCategory.img = url
     const categoryObject = await oldCategory.save()
     const categoryToServe = categoryObject.toJSON()
-    return res.sendStatus(200)
     return res.status(200).json({
       success: true,
       content: categoryToServe,

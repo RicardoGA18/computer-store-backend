@@ -85,22 +85,22 @@ describe('/api/categories/create', () => {
       expect(response.body.success).toBeFalsy()
       expect(response.body.message).toBe('Token de acceso inválido')
     })
-  })
 
-  test('User with the client role can not create a category', async () => {
-    /* Getting the token as a client */
-    const token = await validClientToken()
-    /* Making the request as a user */
-    const response = await api
-      .post('/api/categories/create')
-      .send({name: 'category example'})
-      .set('Authorization', token)
-      .expect(401)
-      .expect('Content-Type', /application\/json/)
-  
-    /* Checking the response */
-    expect(response.body.success).toBeFalsy()
-    expect(response.body.message).toBe('Usuario no autorizado')
+    test('Using a client role token', async () => {
+      /* Getting the token as a client */
+      const token = await validClientToken()
+      /* Making the request as a user */
+      const response = await api
+        .post('/api/categories/create')
+        .send({name: 'category example'})
+        .set('Authorization', token)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+    
+      /* Checking the response */
+      expect(response.body.success).toBeFalsy()
+      expect(response.body.message).toBe('Usuario no autorizado')
+    })
   })
 
   test('Category without name can not be added', async () => {

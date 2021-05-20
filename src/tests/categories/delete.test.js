@@ -41,6 +41,8 @@ describe('/api/categories/deleteById/{categoryId}', () => {
     expect(response.body.success).toBeTruthy()
     expect(response.body.content.categoryId).toBe(categoryId)
     expect(response.body.message).toBe('Categoría elminada correctamente')
+    const afterCateogories = await getCategoriesContent()
+    expect(afterCateogories.length).toBe(categories.length - 1)
   })
   
   describe('Checking its using middlewres of create endpoint', () => {

@@ -23,6 +23,7 @@ const ProductSchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   description:{
     type: String,
@@ -30,7 +31,7 @@ const ProductSchema = new Schema({
   },
   img: {
     type: String,
-    required: true,
+    default: 'https://firebasestorage.googleapis.com/v0/b/computer-store-a1f8e.appspot.com/o/assets%2FGroup%203.png?alt=media&token=520fa3d8-be24-4bb1-9109-027f322d389f'
   },
   officialInformation: {
     type: String,
@@ -54,7 +55,7 @@ const ProductSchema = new Schema({
   },
   slides: {
     type: [String],
-    required: true,
+    default: ['https://firebasestorage.googleapis.com/v0/b/computer-store-a1f8e.appspot.com/o/assets%2FGroup%203.png?alt=media&token=520fa3d8-be24-4bb1-9109-027f322d389f']
   },
   details: {
     type: [ProductDetailSchema],

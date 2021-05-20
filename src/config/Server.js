@@ -10,6 +10,7 @@ if(process.env.NODE_ENV !== 'production'){
 /* Routes imports */
 import authRoutes from '../routes/auth.routes'
 import categoryRoutes from '../routes/categories.routes'
+import productRoutes from '../routes/products.routes'
 
 export default class Server {
   constructor() {
@@ -62,5 +63,6 @@ export default class Server {
   routes(){
     this.app.use('/api/auth', authRoutes)
     this.app.use('/api/categories', categoryRoutes)
+    this.app.use('/api/products', productRoutes)
   }
 }
