@@ -4,8 +4,8 @@ import User from '../../models/User'
 const isAdmin = async (req,res,next) => {
   try {
     /* Verifiying that there is a token */
-    const token = req.headers['x-access-token']
-    if(!token){
+    const bearerToken = req.headers.authorization
+    if(!bearerToken){
       const error = new Error('No token received')
       console.log(error)
       return res.status(403).json({
@@ -15,6 +15,8 @@ const isAdmin = async (req,res,next) => {
       })
     }
     /* Verifiying de expiration and if the user exists */
+    const bearerArray = bearerToken.split(' ')
+    const token = bearerArray[1]
     const { userId } = jwt.verify(token, process.env.JWT_SECRET)
     const userObject = await User.findById(userId)
     const user = userObject.toJSON()
@@ -48,7 +50,7 @@ const isAdmin = async (req,res,next) => {
         message: 'Sesión expirada'
       })
     }
-    if(error.message === 'jwt malformed'){
+    if(error.message === 'jwt malformed' || error.message === 'jwt must be provided'){
       return res.status(400).json({
         success: false,
         content: error.toString(),

@@ -34,7 +34,7 @@ describe('/api/categories/updateById/{categoryId}', () => {
     const response = await api
       .put(`/api/categories/updateById/${categoryId}`)
       .send({name: 'updated category'})
-      .set('x-access-token', token)
+      .set('Authorization', token)
       .expect(200)
       .expect('Content-Type', /application\/json/)
     
@@ -56,7 +56,7 @@ describe('/api/categories/updateById/{categoryId}', () => {
       const response = await api
         .put(`/api/categories/updateById/${categoryId}`)
         .send({name: 'updated category'})
-        .set('x-access-token', token)
+        .set('Authorization', token)
         .expect(401)
         .expect('Content-Type', /application\/json/)
   
@@ -74,7 +74,7 @@ describe('/api/categories/updateById/{categoryId}', () => {
       const response = await api
         .put(`/api/categories/updateById/${categoryId}`)
         .send({name: 123})
-        .set('x-access-token', token)
+        .set('Authorization', token)
         .expect(400)
         .expect('Content-Type', /application\/json/)
   
@@ -92,7 +92,7 @@ describe('/api/categories/updateById/{categoryId}', () => {
       const response = await api
         .put(`/api/categories/updateById/asddd`)
         .send({name: 'updated category'})
-        .set('x-access-token', token)
+        .set('Authorization', token)
         .expect(400)
         .expect('Content-Type', /application\/json/)
       
@@ -112,7 +112,7 @@ describe('/api/categories/updateById/{categoryId}', () => {
       const response = await api
         .put(`/api/categories/updateById/${categoryId}`)
         .send({name: 'updated category'})
-        .set('x-access-token', token)
+        .set('Authorization', token)
         .expect(404)
         .expect('Content-Type', /application\/json/)
       

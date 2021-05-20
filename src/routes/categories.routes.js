@@ -4,6 +4,7 @@ import * as categoryController from '../controllers/category.controller'
 /* Middlewares */
 import validateCategory from '../middlewares/validation/validateCategory'
 import isAdmin from '../middlewares/auth/isAdmin'
+import validateImage from '../middlewares/validation/validateImage'
 
 /* Routes config */
 const router = Router()
@@ -34,6 +35,12 @@ router.delete(
   '/deleteById/:categoryId',
   isAdmin,
   categoryController.deleteCategoryById
+)
+
+router.put(
+  '/uploadPhoto/:categoryId',
+  [ isAdmin , validateImage ],
+  categoryController.uploadPhotoById
 )
 
 export default router

@@ -29,16 +29,17 @@ describe('/api/categories/deleteById/{categoryId}', () => {
     /* Generating a valid token as an admin and a valid id */
     const token = await validAdminToken()
     const categories = await getCategoriesContent()
-    const categoryId = categories[0]._id
+    const categoryId = categories[0]._id.toString()
     /* Making the request with the token */
     const response = await api
       .delete(`/api/categories/deleteById/${categoryId}`)
-      .set('x-access-token', token)
+      .set('Authorization', token)
       .expect(200)
       .expect('Content-Type', /application\/json/)
     
     /* Verifying the response */
     expect(response.body.success).toBeTruthy()
+    expect(response.body.content.categoryId).toBe(categoryId)
     expect(response.body.message).toBe('Categoría elminada correctamente')
   })
   
@@ -51,7 +52,7 @@ describe('/api/categories/deleteById/{categoryId}', () => {
       /* Making the request with the invalid token */
       const response = await api
         .delete(`/api/categories/deleteById/${categoryId}`)
-        .set('x-access-token', token)
+        .set('Authorization', token)
         .expect(401)
         .expect('Content-Type', /application\/json/)
 
@@ -68,7 +69,7 @@ describe('/api/categories/deleteById/{categoryId}', () => {
       /* Making the request with an invalid id */
       const response = await api
         .delete(`/api/categories/deleteById/asdas`)
-        .set('x-access-token', token)
+        .set('Authorization', token)
         .expect(400)
         .expect('Content-Type', /application\/json/)
 
@@ -87,7 +88,7 @@ describe('/api/categories/deleteById/{categoryId}', () => {
       /* Making the response */
       const response = await api
         .delete(`/api/categories/deleteById/${categoryId}`)
-        .set('x-access-token', token)
+        .set('Authorization', token)
         .expect(404)
         .expect('Content-Type', /application\/json/)
       

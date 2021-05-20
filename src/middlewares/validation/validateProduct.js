@@ -1,11 +1,11 @@
 import verifykeys from '../../utils/verifyKeys'
 import verifyTypes from '../../utils/verifyTypes'
 import { isUrl } from '../../utils/regexValidations'
-import Category from '../../models/Category'
+import Product from '../../models/Product'
 
 const validateProduct = async (req, res, next) => {
   /* Checking that the req.body contains the required fields */
-  const requiredFields = ['name','description','officialInformation','price','stock','details']
+  const requiredFields = ['categoryId','name','description','officialInformation','price','stock','details']
   const isValidKeys = verifykeys(req.body, requiredFields)
   if(!isValidKeys.success){
     const error = new Error(`${isValidKeys.key} is a required field`)
@@ -17,10 +17,10 @@ const validateProduct = async (req, res, next) => {
     })
   }
   /* Checking the types of the fields */
-  const { name, description , officialInformation , price , discount , stock , details } = req.body
-  const productFields = ['name','description','officialInformation','discount','price','stock','details']
-  const productValues = [name,description,officialInformation,discount,price,stock,details]
-  const productTypes = ['string','string','string','number','number','number','object']
+  const { categoryId, name, description , officialInformation , price , discount , stock , details } = req.body
+  const productFields = ['categoryId','name','description','officialInformation','discount','price','stock','details']
+  const productValues = [categoryId,name,description,officialInformation,discount,price,stock,details]
+  const productTypes = ['integer','string','string','string','number','number','number','object']
   const isValidTypes = verifyTypes(productValues,productTypes,productFields)
   if(!isValidTypes.success){
     const error = new Error(`${isValidTypes.field} must be ${isValidTypes.type}`)
@@ -87,7 +87,7 @@ const validateProduct = async (req, res, next) => {
   }
   /* Checking unique fields */
   try {
-    const categories = await Category.findOne({products: {}})
+    
   } catch (error) {
     
   }

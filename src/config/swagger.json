@@ -1,18 +1,23 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "description": "Backend with Express, MongoDB and MercadoPago for Computer Store ecommerce.",
     "version": "1.0.0",
     "title": "Computer Store",
-    "contact": {
-      "email": "example@computerstore.com"
-    },
     "license": {
       "name": "MIT"
     }
   },
-  "host": "http://localhost:8000",
-  "basePath": "/api",
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:8000/",
+      "description": "Local server for development"
+    }
+  ],
   "tags": [
     {
       "name": "Auth",
@@ -31,52 +36,58 @@
         ],
         "summary": "User sign up",
         "operationId": "registerUser",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "User object that will be registered",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/registerObject"
+        "requestBody": {
+          "description": "User object that will be registered",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/registerObject"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "201": {
             "description": "User sign up successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "content": {
-                  "$ref": "#/definitions/userLogged"
-                },
-                "message": {
-                  "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/userLogged"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "500":{
             "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           }
         }
@@ -89,64 +100,78 @@
         ],
         "summary": "User sign in",
         "operationId": "loginUser",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "User object that will log in",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/loginObject"
+        "requestBody":{
+          "description": "User object that will log in",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginObject"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "User sign in successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "content":{
-                  "$ref": "#/definitions/userLogged"
-                },
-                "message": {
-                  "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content":{
+                      "$ref": "#/components/schemas/userLogged"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
           "403": {
             "description": "Incorrect password",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "404": {
             "description": "User does not exists",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "400": {
             "description": "Bad request",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "500": {
             "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           }
         }
@@ -159,35 +184,40 @@
         ],
         "summary": "Get all categories",
         "operationId": "getCategories",
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200":{
             "description": "Categories obtained successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "content": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/category"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/category"
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    }
                   }
-                },
-                "message": {
-                  "type": "string"
                 }
               }
             }
           },
           "500": {
             "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           }
         }
@@ -201,71 +231,83 @@
         "summary": "Create a category ( only admin )",
         "description": "A token is needed to validate that the request is made by an administrator",
         "operationId": "createCategory",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
+        "security": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "Category object that will be created",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/postCategory"
-            }
-          },
-          {
-            "in": "header",
-            "name": "x-access-token",
-            "description": "Json web token",
-            "required": "true",
-            "type": "string"
+            "JsonWebToken": []
           }
         ],
+        "requestBody": {
+          "description": "Category object that will be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postCategory"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Category created successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "content": {
-                  "$ref": "#/definitions/category"
-                },
-                "message": {
-                  "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/category"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "403": {
             "description": "Invalid Token",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "500": {
             "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           }
         }
@@ -278,46 +320,58 @@
         ],
         "summary": "Get a category by id",
         "operationId": "getCategory",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "in": "path",
             "name": "categoryId",
             "description": "Id of the category that will be obtained",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Category obtained successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "content": {
-                  "$ref": "#/definitions/category"
-                },
-                "message": {
-                  "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/category"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
           "404": {
             "description": "Category not found",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "500": {
             "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           }
         }
@@ -331,83 +385,104 @@
         "summary": "Update a category by id ( only admin )",
         "description": "A token is needed to validate that the request is made by an administrator",
         "operationId": "updateCategory",
-        "produces": [
-          "application/json"
-        ],
-        "consumes": [
-          "application/json"
+        "security": [
+          {
+            "JsonWebToken": []
+          }
         ],
         "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Category object that will be updated",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/postCategory"
-            }
-          },
-          {
-            "in": "header",
-            "name": "x-access-token",
-            "description": "Json web token",
-            "required": "true",
-            "type": "string"
-          },
           {
             "in": "path",
             "name": "categoryId",
             "description": "Id of the category that will be updated",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
+        "requestBody": {
+          "description": "Category object that will be updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/postCategory"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Category updated successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "content": {
-                  "$ref": "#/definitions/category"
-                },
-                "message": {
-                  "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/category"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "403": {
             "description": "Invalid Token",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "404": {
             "description": "Category not found",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "500": {
             "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           }
         }
@@ -421,200 +496,366 @@
         "summary": "Delete a category by id ( only admin )",
         "description": "A token is needed to validate that the request is made by an administrator",
         "operationId": "deleteCategory",
-        "produces": [
-          "application/json"
+        "security": [
+          {
+            "JsonWebToken": []
+          }
         ],
         "parameters": [
-          {
-            "in": "header",
-            "name": "x-access-token",
-            "description": "Json web token",
-            "required": "true",
-            "type": "string"
-          },
           {
             "in": "path",
             "name": "categoryId",
             "description": "Id of the category that will be deleted",
-            "required": true
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Category deleted successfully",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "content": {
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
-                  "default": null
-                },
-                "message": {
-                  "type": "string"
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "categoryId": {
+                          "type": "string",
+                          "format": "uuid"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
             "description": "Bad request",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "401": {
             "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "403": {
             "description": "Invalid Token",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "404": {
             "description": "Category not found",
-            "schema": {
-              "$ref": "#/definitions/error"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           },
           "500": {
             "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/uploadPhoto/{categoryId}":{
+      "put": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Upload a photo for a category ( only admin )",
+        "description": "A token is needed to validate that the request is made by an administrator",
+        "operationId": "uploadPhoto",
+        "security": [
+          {
+            "JsonWebToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "Id of the category that will be received the photo",
+            "required": true,
             "schema": {
-              "$ref": "#/definitions/error"
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody":{
+          "description": "Image to upload",
+          "required": true,
+          "content": {
+            "multipart/form-data":{
+              "schema": {
+                "type": "object",
+                "required": [
+                  "image"
+                ],
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Photo uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/category"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Invalid Image",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
             }
           }
         }
       }
     }
   },
-  "definitions": {
-    "category": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "name": {
-          "type": "string"
-        },
-        "img": {
-          "type": "string",
-          "format": "url"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date"
-        }
+  "components": {
+    "securitySchemes": {
+      "JsonWebToken":{
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     },
-    "postCategory": {
-      "type": "object",
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "type": "string"
+    "schemas": {
+      "category": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "img": {
+            "type": "string",
+            "format": "url"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
+          }
         }
-      }
-    },
-    "userLogged": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "token": {
-          "type": "string",
-          "format": "json web token"
-        },
-        "name": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "avatar": {
-          "type": "string",
-          "format": "url"
-        },
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
-        "role": {
-          "type": "string",
-          "enum": ["client","admin"],
-          "default": "user"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date"
+      },
+      "postCategory": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
         }
-      }
-    },
-    "registerObject": {
-      "type": "object",
-      "required": ["name","lastName","email","password"],
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
-        "password": {
-          "type": "string",
-          "format": "password"
+      },
+      "userLogged": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "token": {
+            "type": "string",
+            "format": "json web token"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "url"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["client","admin"],
+            "default": "user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
+          }
         }
-      }
-    },
-    "loginObject": {
-      "type": "object",
-      "required": ["email","password"],
-      "properties": {
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
-        "password": {
-          "type": "string",
-          "format": "password"
+      },
+      "registerObject": {
+        "type": "object",
+        "required": ["name","lastName","email","password"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
         }
-      }
-    },
-    "error": {
-      "type": "object",
-      "properties": {
-        "success": {
-          "type": "boolean",
-          "default": false
-        },
-        "content": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
+      },
+      "loginObject": {
+        "type": "object",
+        "required": ["email","password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": false
+          },
+          "content": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
         }
       }
     }

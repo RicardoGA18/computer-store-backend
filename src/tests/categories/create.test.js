@@ -32,7 +32,7 @@ describe('/api/categories/create', () => {
     const response = await api
       .post('/api/categories/create')
       .send({name: 'category example'})
-      .set('x-access-token', token)
+      .set('Authorization', token)
       .expect(201)
       .expect('Content-Type', /application\/json/)
     
@@ -64,7 +64,7 @@ describe('/api/categories/create', () => {
       const response = await api
         .post('/api/categories/create')
         .send({name: 'category example'})
-        .set('x-access-token', token)
+        .set('Authorization', token)
         .expect(401)
         .expect('Content-Type', /application\/json/)
 
@@ -78,7 +78,7 @@ describe('/api/categories/create', () => {
       const response = await api
         .post('/api/categories/create')
         .send({name: 'category example'})
-        .set('x-access-token', 'asdasdasdasdasd')
+        .set('Authorization', 'asdasdasdasdasd')
         .expect(400)
         .expect('Content-Type', /application\/json/)
 
@@ -94,7 +94,7 @@ describe('/api/categories/create', () => {
     const response = await api
       .post('/api/categories/create')
       .send({name: 'category example'})
-      .set('x-access-token', token)
+      .set('Authorization', token)
       .expect(401)
       .expect('Content-Type', /application\/json/)
   
@@ -110,7 +110,7 @@ describe('/api/categories/create', () => {
     const response = await api
       .post('/api/categories/create')
       .send({})
-      .set('x-access-token', token)
+      .set('Authorization', token)
       .expect(400)
       .expect('Content-Type', /application\/json/)
     
@@ -126,7 +126,7 @@ describe('/api/categories/create', () => {
     const response = await api
       .post('/api/categories/create')
       .send({name: 123})
-      .set('x-access-token', token)
+      .set('Authorization', token)
       .expect(400)
       .expect('Content-Type', /application\/json/)
     

@@ -8,7 +8,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./build/index.js",
     "dev": "cross-env NODE_ENV=development nodemon --exec babel-node ./src/index.js",
-    "build": "babel src --out-dir build",
+    "clean": "rm -rf build",
+    "build": "yarn clean && babel src --out-dir build",
     "test": "cross-env NODE_ENV=test jest --verbose --forceExit --maxWorkers=1",
     "test:silent": "yarn test -- --silent",
     "test:watch": "yarn test -- --watch"

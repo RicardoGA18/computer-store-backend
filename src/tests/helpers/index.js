@@ -48,7 +48,7 @@ export const validClientToken = async () => {
   const token = jwt.sign({userId: client._id},process.env.JWT_SECRET,{
     expiresIn: 60 * 60 * 24 * 15 // 15 days
   })
-  return token
+  return `Bearer ${token}`
 }
 
 export const invalidClientToken = async () => {
@@ -57,7 +57,7 @@ export const invalidClientToken = async () => {
   const token = jwt.sign({userId: client._id},process.env.JWT_SECRET,{
     expiresIn: 0
   })
-  return token
+  return `Bearer ${token}`
 } 
 
 export const validAdminToken = async () => {
@@ -66,7 +66,7 @@ export const validAdminToken = async () => {
   const token = jwt.sign({userId: admin._id},process.env.JWT_SECRET,{
     expiresIn: 60 * 60 * 24 * 15 // 15 days
   })
-  return token
+  return `Bearer ${token}`
 }
 
 export const invalidAdminToken = async () => {
@@ -75,7 +75,7 @@ export const invalidAdminToken = async () => {
   const token = jwt.sign({userId: admin._id},process.env.JWT_SECRET,{
     expiresIn: 0
   })
-  return token
+  return `Bearer ${token}`
 }
 
 export const decodeToken = token => {

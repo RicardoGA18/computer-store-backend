@@ -2,6 +2,7 @@ import express from 'express'
 import { connect } from 'mongoose'
 import swaggerUi from 'swagger-ui-express'
 import swaggerDoc from './swagger.json'
+import cors from 'cors'
 /* Configure dotenv only for development and test environment */
 if(process.env.NODE_ENV !== 'production'){
   require('dotenv').config()
@@ -14,6 +15,7 @@ export default class Server {
   constructor() {
     /* Basic configuration */
     this.app = express()
+    this.cors()
     this.app.use(express.json())
     this.port = process.env.NODE_ENV ==='test'
       ? process.env.PORT_TEST || 8001
@@ -47,6 +49,15 @@ export default class Server {
   }
   swagger(){
     this.app.use('/api/docs',swaggerUi.serve,swaggerUi.setup(swaggerDoc))
+  }
+  cors(){
+    this.app.use(cors({
+      origin: '*',
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      preflightContinue: false,
+      optionsSuccessStatus: 204,
+      allowedHeaders: ['Content-Type', 'Authorization']
+    }))
   }
   routes(){
     this.app.use('/api/auth', authRoutes)
