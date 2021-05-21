@@ -1,4 +1,6 @@
 import Product from '../models/Product'
+import Category from '../models/Category'
+import getUrlFromFile from '../utils/getUrlFromFile'
 
 export const createProduct = async (req, res) => {
   try {
@@ -130,6 +132,45 @@ export const getOfferProducts = async (req,res) => {
   }
 }
 
+export const getProductsByCategoryId = async (req,res) => {
+  try {
+    const { categoryId } = req.params
+    /* Checking that the category exists */
+    const category = await Category.findById(categoryId)
+    if(!category){
+      const error = new Error('Id of non-existent category')
+      console.log(error)
+      return res.status(404).json({
+        success: false,
+        content: error.toString(),
+        message: 'Id de categoría no existente'
+      })
+    }
+    /* Getting the products */
+    const products = await Product.find({ categoryId })
+    const allProducts = products.map(product => product.toJSON())
+    return res.status(200).json({
+      success: true,
+      content: allProducts,
+      message: 'Productos obtenidos correctamente'
+    })
+  } catch (error) {
+    console.log(error)
+    if(error.path === '_id'){
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: "Id inválido"
+      })
+    }
+    return res.status(500).json({
+      success: false,
+      content: error.toString(),
+      message: "Error interno al obtener productos",
+    })
+  }
+}
+
 export const updateProductById = async (req,res) => {
   try {
     /* Getting the id and the product data */
@@ -224,3 +265,145 @@ export const deleteProductById = async (req, res) => {
   }
 }
 
+export const uploadPhotoById = async (req,res) => {
+  try {
+    const { productId } = req.params
+    const { files } = req
+    const file = files[0]
+    /* Checking that was received an image */
+    if(!files.length){
+      const error = new Error('No file received')
+      console.log(error)
+      return res.status(406).json({
+        success: false,
+        content: error.toString(),
+        message: 'No se recibió ninguna imagen'
+      })
+    }
+    /* Checking there is only one file */
+    if(files.length > 1){
+      const error = new Error('More than one image was received')
+      console.log(error)
+      return res.status(406).json({
+        success: false,
+        content: error.toString(),
+        message: 'Se envió más de una imagen'
+      })
+    }
+    /* Checking that the product exists */
+    const oldProduct = await Product.findById(productId)
+    if(!oldProduct){
+      const error = new Error('Product not found')
+      console.log(error)
+      return res.status(404).json({
+        success: false,
+        content: error.toString(),
+        message: 'Product no encontrado'
+      })
+    }
+    /* Getting the category and replace it in the category */
+    const url = await getUrlFromFile(file)
+    oldProduct.img = url
+    const productObject = await oldProduct.save()
+    const productToServe = productObject.toJSON()
+    return res.status(200).json({
+      success: true,
+      content: productToServe,
+      message: 'Imagen subida exitosamente'
+    })
+  } catch (error) {
+    console.log(error)
+    if(error.path === '_id'){
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: 'Id inválido'
+      })
+    }
+    return res.status(500).json({
+      success: false,
+      content: error.toString(),
+      message: 'Error interno al subir imagen'
+    })
+  }
+}
+
+export const uploadSlidesById = async (req,res) => {
+  try {
+    /* Getting the data */
+    const { files } = req
+    const { imagesToDelete } = req.body
+    const { productId } = req.params
+    /* Checking that the product exists */
+    const oldProduct = await Product.findById(productId)
+    if(!oldProduct){
+      const error = new Error('Product not found')
+      console.log(error)
+      return res.status(404).json({
+        success: false,
+        content: error.toString(),
+        message: 'Producto no encontrado'
+      })
+    }
+    /* Validating imageToDelete */
+    const deleteArray = JSON.parse(imagesToDelete)
+    if(!(deleteArray instanceof Array)){
+      const error = new Error('imagesToDelete must be a stringify array')
+      console.log(error)
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: 'imagesToDelete debe ser un array transformado a string'
+      })
+    }
+    /* Getting the urls of the new slides */
+    const uploadedSlides = []
+    for(let file of files){
+      const newUrl = await getUrlFromFile(file)
+      uploadedSlides.push(newUrl)
+    }
+    /* Modeling slides */
+    const { slides } = oldProduct.toJSON()
+    let oldSlides = JSON.parse(JSON.stringify(slides))
+    if(files.length){
+      oldSlides = oldSlides.filter(slide => slide !== 'https://firebasestorage.googleapis.com/v0/b/computer-store-a1f8e.appspot.com/o/assets%2FGroup%203.png?alt=media&token=520fa3d8-be24-4bb1-9109-027f322d389f')
+    }
+    for(let url of deleteArray){
+      oldSlides = oldSlides.filter(slide => slide !== url)
+    }
+    const newSlides = [
+      ...oldSlides,
+      ...uploadedSlides,
+    ]
+    /* Returning the updated product */
+    oldProduct.slides = newSlides
+    const productObject = await oldProduct.save()
+    const productToServe = productObject.toJSON()
+    return res.status(200).json({
+      success: true,
+      content: productToServe,
+      message: 'Slides subidos exitosamente'
+    })
+  } catch (error) {
+    console.log(error)
+    if(error.path === '_id'){
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: 'Id inválido'
+      })
+    }
+    if(error instanceof SyntaxError){
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: 'Campo imagesToDelete inválido'
+      })
+    }
+    return res.status(500).json({
+      success: false,
+      content: error.toString(),
+      message: 'Error interno al subir slides'
+    })
+  }
+}

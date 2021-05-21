@@ -93,6 +93,55 @@ describe('Get products => /api/products', () => {
     })
   })
 
+  describe('/getByCategoryId/{categoryId}', () => {
+    test('Getting products by category id successfully', async () => {
+      /* Getting the id */
+      const categories = await getCategoriesContent()
+      const categoryId = categories[0]._id.toString()
+      /* Making the request */
+      const response = await api
+        .get(`/api/products/getByCategoryId/${categoryId}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      /* Checking the response */
+      expect(response.body.success).toBeTruthy()
+      expect(response.body.message).toBe('Productos obtenidos correctamente')
+      for(let product of response.body.content){
+        expect(product.categoryId).toBe(categoryId)
+      }
+    })
+
+    describe('Can not get a product with an invalid category id', () => {
+      test('with a not mongodb id string', async () => {
+        /* Making the request with an invalid id */
+        const response = await api
+          .get('/api/products/getByCategoryId/asdasd')
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
+        
+        /* Checking the response */
+        expect(response.body.success).toBeFalsy()
+        expect(response.body.message).toBe('Id inválido')
+      })
+
+      test('with a non-existent category id', async () => {
+        /* Getting an invalid id */
+        const products = await getProductsContent()
+        const invalidId = products[0]._id
+        /* Making the request */
+        const response = await api
+          .get(`/api/products/getByCategoryId/${invalidId}`)
+          .expect(404)
+          .expect('Content-Type', /application\/json/)
+
+        /* Checking the response */
+        expect(response.body.success).toBeFalsy()
+        expect(response.body.message).toBe('Id de categoría no existente')
+      })
+    })
+  })
+
   test('/getLatest , Getting latest products successfully', async () => {
     /* Making the request */
     const response = await api
@@ -102,7 +151,7 @@ describe('Get products => /api/products', () => {
 
     /* Checking the response */
     expect(response.body.success).toBeTruthy()
-    expect(response.body.message).toBe('Últimos productos obtenidos exitosamente')
+    expect(response.body.message).toBe('Últimos ordenados por fecha obtenidos exitosamente')
     for(let i = 0; i < response.body.content.length - 1; i++){
       const firstDate = new Date(response.body.content[i].createdAt)
       const secondDate = new Date(response.body.content[i+1].createdAt)

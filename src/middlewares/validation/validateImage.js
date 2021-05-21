@@ -34,16 +34,6 @@ const validateImage = (req,res,next) => {
         message: 'Error interno al validar imagen'
       })
     }
-    /* Checking that was received an image */
-    if(!req.files.length){
-      const error = new Error('No file received')
-      console.log(error)
-      return res.status(406).json({
-        success: false,
-        content: error.toString(),
-        message: 'No se recibió ninguna imagen'
-      })
-    }
     /* Checking the files are images */
     for(let i = 0; i < req.files.length; i++){
       if(!(

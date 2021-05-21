@@ -179,6 +179,16 @@ export const uploadPhotoById = async (req,res) => {
     const { categoryId } = req.params
     const { files } = req
     const file = files[0]
+    /* Checking that was received an image */
+    if(!files.length){
+      const error = new Error('No file received')
+      console.log(error)
+      return res.status(406).json({
+        success: false,
+        content: error.toString(),
+        message: 'No se recibió ninguna imagen'
+      })
+    }
     /* Checking there is only one file */
     if(files.length > 1){
       const error = new Error('More than one image was received')
