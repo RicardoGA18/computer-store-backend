@@ -79,6 +79,29 @@ describe('/api/products/create', () => {
   })
 
   describe('Product can not be added with an invalid request body', () => {
+    test('with an existent name', async () => {
+      /* Getting the token and an invalid id and preparing the product */
+      const products = await getProductsContent()
+      const token = await validAdminToken()
+      const categories = await getCategoriesContent()
+      const existentProduct = {
+        ...JSON.parse(JSON.stringify(productExample)),
+        categoryId: categories[0]._id,
+        name: products[0].name,
+      }
+      /* Making the response */
+      const response = await api
+        .post('/api/products/create')
+        .send(existentProduct)
+        .set('Authorization', token)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+  
+      /* Checking the response */
+      expect(response.body.success).toBeFalsy()
+      expect(response.body.message).toBe(`El producto ${products[0].name} ya existe`)
+    })
+
     test('without a required field', async () => {
       /* Required fields */
       const requiredFields = ['name','categoryId','description','officialInformation','price','stock','details']

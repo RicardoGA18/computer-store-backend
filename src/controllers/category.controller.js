@@ -4,6 +4,17 @@ import getUrlFromFile from '../utils/getUrlFromFile'
 export const createCategory = async (req,res) => {
   try {
     const { name } = req.body
+    /* Validating unique fields */
+    const matchName = await Category.findOne({name})
+    if(matchName){
+      const error = new Error(`'${name}' category already exists. The name field must be unique`)
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: `La categoría ${name} ya existe`
+      })
+    }
+    /* Creating the category */
     const newCategoryInstance = new Category({ name })
     const newCategory = await newCategoryInstance.save()
     const category = newCategory.toJSON()
@@ -55,7 +66,7 @@ export const getCategoryById = async (req,res) => {
         message: 'Categoría no encontrada'
       })
     }
-    /* returning the category */
+    /* Returning the category */
     const category = categoryObject.toJSON()
     return res.status(200).json({
       success: true,
@@ -136,7 +147,7 @@ export const deleteCategoryById = async (req,res) => {
         message: 'Categoría no encontrada'
       })
     }
-    /* Deleting the category and return success response */
+    /* Deleting the category and returning the category id */
     const { _id } = categoryObject.toJSON()
     await Category.findByIdAndDelete(categoryId)
     return res.status(200).json({

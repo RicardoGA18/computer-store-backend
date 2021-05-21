@@ -118,17 +118,6 @@ const validateProduct = async (req, res, next) => {
         message: 'Id de categoría no existente'
       })
     }
-    /* Checking unique fields */
-    const matchName = await Product.findOne({name})
-    if(matchName){
-      const error = new Error('The product already exists')
-      console.log(error)
-      return res.status(400).json({
-        success: false,
-        content: error.toString(),
-        message: `El producto ${name} ya existe`
-      })
-    }
     next()
     return
   } catch (error) {

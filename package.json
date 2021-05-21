@@ -11,6 +11,7 @@
     "clean": "rm -rf build",
     "build": "yarn clean && babel src --out-dir build",
     "test": "cross-env NODE_ENV=test jest --verbose --forceExit --maxWorkers=1",
+    "test:detailed": "cross-env NODE_ENV=test jest --maxWorkers=1",
     "test:silent": "yarn test --silent",
     "test:watch": "yarn test --watch"
   },

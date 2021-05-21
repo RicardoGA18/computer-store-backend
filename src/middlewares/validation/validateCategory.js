@@ -30,26 +30,8 @@ const validateCategory = async (req,res,next) => {
       message: `El campo ${isValidTypes.field} debe ser ${isValidTypes.type}`
     })
   }
-  /* Validating unique fields */
-  try {
-    const matchName = await Category.findOne({name})
-    if(matchName){
-      const error = new Error(`'${name}' category already exists. The name field must be unique`)
-      return res.status(400).json({
-        success: false,
-        content: error.toString(),
-        message: `La categoría ${name} ya existe`
-      })
-    }
-    next()
-    return
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      content: error.toString(),
-      message: 'Error interno del servidor al validar categoría'
-    }) 
-  }
+  next()
+  return
 }
 
 export default validateCategory

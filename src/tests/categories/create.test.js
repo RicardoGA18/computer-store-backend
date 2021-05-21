@@ -9,6 +9,7 @@ import {
   invalidAdminToken,
   validClientToken,
   initialUsers,
+  getCategoriesContent,
 } from '../helpers'
 
 describe('/api/categories/create', () => {
@@ -133,6 +134,22 @@ describe('/api/categories/create', () => {
     /* Checking the response */
     expect(response.body.success).toBeFalsy()
     expect(response.body.message).toBe('El campo name debe ser string')
+  })
+
+  test('Category with an existent name can not be added', async () => {
+    /* Generating a valid token as an admin */
+    const token = await validAdminToken()
+    const categories = await getCategoriesContent()
+    const response = await api
+      .post('/api/categories/create')
+      .send({name: categories[0].name})
+      .set('Authorization', token)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+    
+    /* Checking the response */
+    expect(response.body.success).toBeFalsy()
+    expect(response.body.message).toBe(`La categoría ${categories[0].name} ya existe`)
   })
 
   afterAll(async () => {

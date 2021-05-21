@@ -43,4 +43,18 @@ router.put(
   categoryController.uploadPhotoById
 )
 
+/* Error routes */
+const error = new Error('No categoryId was received')
+
+const idError = {
+  success: false,
+  content: error.toString(),
+  message: 'No se recibió el id de categoría'
+}
+
+router.get('/getById',(req,res) => res.status(400).json(idError))
+router.put('/updateById',(req,res) => res.status(400).json(idError))
+router.delete('/deleteById',(req,res) => res.status(400).json(idError))
+router.put('/uploadPhoto',(req,res) => res.status(400).json(idError))
+
 export default router

@@ -65,7 +65,7 @@ describe('/api/categories/deleteById/{categoryId}', () => {
   })
 
   describe('Can not delete a category with an invalid id', () => {
-    test('with a not mongodb is string', async () => {
+    test('with a not mongodb id string', async () => {
       /* Generating a valid token */
       const token = await validAdminToken()
       /* Making the request with an invalid id */

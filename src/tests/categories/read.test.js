@@ -3,7 +3,7 @@ import { server } from '../../index'
 import { connection } from 'mongoose'
 import { api , initialCategories , getCategoriesContent } from '../helpers'
 
-describe('/api/categories', () => {
+describe('Get categories => /api/categories', () => {
   beforeEach(async () => {
     await Category.deleteMany({})
     for(let initialCategory of initialCategories){
@@ -60,7 +60,7 @@ describe('/api/categories', () => {
         const categories = await getCategoriesContent()
         const categoryId = categories[0]._id
         await Category.findByIdAndDelete(categoryId)
-        /* Making the response */
+        /* Making the request */
         const response = await api
           .get(`/api/categories/getById/${categoryId}`)
           .expect(404)

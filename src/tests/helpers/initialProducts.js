@@ -38,7 +38,7 @@ export const initialProducts = [
     name: 'Servidor HPE ProLiant MicroServer',
     price: 2183,
     stock: 5,
-    discount: 0,
+    discount: 20,
     img: 'https://cdn.memorykings.com.pe/files/2020/03/09/326001-MK026596A.jpg',
     officialInformation: 'https://buy.hpe.com/es/es/servers/proliant-microserver/proliant-microserver/proliant-microserver/hpe-proliant-microserver-gen10-plus/p/1012241014',
     description: `Descripcion de ejemplo servidor`,
@@ -163,7 +163,7 @@ export const initialProducts = [
     name: 'Cooler CPU ASUS',
     price: 703.08,
     stock: 11,
-    discount: 0,
+    discount: 35,
     officialInformation: 'https://rog.asus.com/mx/cooling/cpu-liquid-coolers/rog-ryuo/rog-ryuo-120-model/',
     description: `Ejemplo descripcion`,
     details: [
