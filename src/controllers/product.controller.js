@@ -99,7 +99,7 @@ export const getLatestProducts = async (req,res) => {
     return res.status(200).json({
       success: true,
       content: allProducts,
-      message: 'Últimos productos obtenidos exitosamente'
+      message: 'Últimos ordenados por fecha obtenidos exitosamente'
     })
   } catch (error) {
     console.log(error)
