@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import User from '../../models/User'
 
-const isAdmin = async (req,res,next) => {
+const isClient = async (req,res,next) => {
   try {
     /* Verifiying that there is a token */
     const bearerToken = req.headers.authorization
@@ -21,17 +21,21 @@ const isAdmin = async (req,res,next) => {
     const userObject = await User.findById(userId)
     const user = userObject.toJSON()
     if(!user){
-      const error = new Error('Token with a non-existent user')
+      const error = new Error('Token with a non-existent client')
       console.log(error)
       return res.status(403).json({
         success: false,
         content: error.toString(),
-        message: 'Token de acceso con usuario no existente'
+        message: 'Token de acceso con cliente no existente'
       })
     }
-    /* Verifiyin the user have the admin role */
-    if(user.role !== 'admin'){
-      const error = new Error('Unauthorized. The user must be an admin')
+    /* Verifiying is the same user who make the request or if is an admin */
+    const { clientId } = req.params
+    if(!( 
+      user.role === 'admin' ||
+      ( user.role === 'client' && user._id.toString() === clientId )
+    )){
+      const error = new Error('Unauthorized. A client only have access to his information')
       console.log(error)
       return res.status(401).json({
         success: false,
@@ -72,4 +76,4 @@ const isAdmin = async (req,res,next) => {
   }
 }
 
-export default isAdmin
+export default isClient

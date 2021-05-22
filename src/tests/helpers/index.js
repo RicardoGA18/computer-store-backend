@@ -20,9 +20,30 @@ export const initialUsers = [
     decodePass: 'adminpass123',
   },
   {
-    name: 'user',
+    name: 'pedro',
     lastName: 'example',
-    email: 'user@example.net',
+    email: 'pedro@example.net',
+    password: User.encryptPassword('userpass123'),
+    decodePass: 'userpass123',
+  },
+  {
+    name: 'Leonel',
+    lastName: 'example',
+    email: 'leo@example.net',
+    password: User.encryptPassword('userpass123'),
+    decodePass: 'userpass123',
+  },
+  {
+    name: 'Alex',
+    lastName: 'Milan',
+    email: 'Alex@example.net',
+    password: User.encryptPassword('userpass123'),
+    decodePass: 'userpass123',
+  },
+  {
+    name: 'Pepito',
+    lastName: 'Perez',
+    email: 'pepito@example.net',
     password: User.encryptPassword('userpass123'),
     decodePass: 'userpass123',
   }
@@ -43,6 +64,30 @@ export const getUsersContent = async () => {
 }
 
 /* Auth */
+export const validClientTokenWithId = async () => {
+  const clientObject = await User.findOne({role: 'client'})
+  const client = clientObject.toJSON()
+  const token = jwt.sign({userId: client._id},process.env.JWT_SECRET,{
+    expiresIn: 60 * 60 * 24 * 15 // 15 days
+  })
+  return {
+    token: `Bearer ${token}`,
+    id: client._id.toString()
+  }
+}
+
+export const invalidClientTokenWithId = async () => {
+  const clientObject = await User.findOne({role: 'client'})
+  const client = clientObject.toJSON()
+  const token = jwt.sign({userId: client._id},process.env.JWT_SECRET,{
+    expiresIn: 0
+  })
+  return {
+    token: `Bearer ${token}`,
+    id: client._id.toString()
+  }
+}
+
 export const validClientToken = async () => {
   const clientObject = await User.findOne({role: 'client'})
   const client = clientObject.toJSON()
@@ -53,7 +98,7 @@ export const validClientToken = async () => {
 }
 
 export const invalidClientToken = async () => {
-  const clientObject = await User.findOne({role: 'user'})
+  const clientObject = await User.findOne({role: 'client'})
   const client = clientObject.toJSON()
   const token = jwt.sign({userId: client._id},process.env.JWT_SECRET,{
     expiresIn: 0
