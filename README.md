@@ -30,17 +30,25 @@ FIREBASE_CREDENTIALS_JSON=
  - `$ yarn test:watch` : run tests and keep watching
 
 ## Environment variables
+
+Create `.env` file to set the environment variables
+
 ```
 # Custom port to run the app
 PORT=
+
 # Custom port to run the tests
 PORT_TEST=
+
 # Mongo DB connection URI.
 MONGO_DB_URI=
+
 # Test Mongo DB connection URI
 MONGO_DB_URI_TEST=
+
 # Secret key for JsonWebTokens.
 JWT_SECRET=
+
 # JSON credentials in a string format. Can use JSON.stringify() to get it.
 FIREBASE_CREDENTIALS_JSON=
 ```
