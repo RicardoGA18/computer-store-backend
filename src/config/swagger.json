@@ -629,7 +629,7 @@
           {
             "in": "path",
             "name": "categoryId",
-            "description": "Id of the category that will be received the photo",
+            "description": "Id of the category that will received the photo",
             "required": true,
             "schema": {
               "type": "string"
@@ -637,7 +637,7 @@
           }
         ],
         "requestBody":{
-          "description": "Image to upload",
+          "description": "Image to upload ( max size: 5 MB )",
           "required": true,
           "content": {
             "multipart/form-data":{
@@ -1355,7 +1355,7 @@
           {
             "in": "path",
             "name": "productId",
-            "description": "Id of the product that will be received the photo",
+            "description": "Id of the product that will received the photo",
             "required": true,
             "schema": {
               "type": "string"
@@ -1363,7 +1363,7 @@
           }
         ],
         "requestBody":{
-          "description": "Image to upload",
+          "description": "Image to upload ( max size: 5 MB )",
           "required": true,
           "content": {
             "multipart/form-data":{
@@ -1485,7 +1485,7 @@
           {
             "in": "path",
             "name": "productId",
-            "description": "Id of the product that will be received the slides",
+            "description": "Id of the product that will received the slides",
             "required": true,
             "schema": {
               "type": "string"
@@ -1493,7 +1493,7 @@
           }
         ],
         "requestBody":{
-          "description": "Object with the slides and an stringify array of images to delete. Use JSON.stringify to get the array",
+          "description": "Object with the slides ( max size: 5 MB ) and an stringify array of images to delete. Use JSON.stringify to get the array",
           "required": true,
           "content": {
             "multipart/form-data":{
@@ -1665,6 +1665,16 @@
               }
             }
           },
+          "403": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -1737,6 +1747,26 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Client not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1836,6 +1866,26 @@
               }
             }
           },
+          "403": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Client not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error",
             "content": {
@@ -1914,6 +1964,156 @@
           },
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Client not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clients/uploadAvatar/{clientId}": {
+      "put": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Upload an avatar for a client ( only account owner or admin )",
+        "description": "A token is needed to validate that the request is made by the account owner or an admin",
+        "operationId": "uploadAvatarClient",
+        "security": [
+          {
+            "JsonWebToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "clientId",
+            "description": "Id of the client that will received the avatar",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody":{
+          "description": "Image to upload ( max size: 5 MB )",
+          "required": true,
+          "content": {
+            "multipart/form-data":{
+              "schema": {
+                "type": "object",
+                "required": [
+                  "image"
+                ],
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Avatar uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "default": true
+                    },
+                    "content": {
+                      "$ref": "#/components/schemas/user"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Client not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            }
+          },
+          "406": {
+            "description": "Invalid Image",
             "content": {
               "application/json": {
                 "schema": {

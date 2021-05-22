@@ -5,6 +5,7 @@ import * as clientController from '../controllers/client.controller'
 import isAdmin from '../middlewares/auth/isAdmin'
 import isClient from '../middlewares/auth/isClient'
 import validateUpdateClient from '../middlewares/validation/validateUpdateClient'
+import validateImage from '../middlewares/validation/validateImage'
 
 /* Routes config */
 const router = Router()
@@ -33,6 +34,12 @@ router.delete(
   clientController.deleteClientById
 )
 
+router.put(
+  '/uploadAvatar/:clientId',
+  [ isClient , validateImage ],
+  clientController.uploadAvatarById
+)
+
 /* Error routes */
 const error = new Error('No clientId was received')
 
@@ -45,6 +52,6 @@ const idError = {
 router.get('/getById',(req,res) => res.status(400).json(idError))
 router.put('/updateById',(req,res) => res.status(400).json(idError))
 router.delete('/deleteById',(req,res) => res.status(400).json(idError))
-router.put('/uploadPhoto',(req,res) => res.status(400).json(idError))
+router.put('/uploadAvatar',(req,res) => res.status(400).json(idError))
 
 export default router
