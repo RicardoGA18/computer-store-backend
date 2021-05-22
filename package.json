@@ -1,5 +1,6 @@
 {
-  "name": "ecommerce-express",
+  "name": "computer-store-backend",
+  "description": "Backend with Express, MongoDB and MercadoPago for Computer Store ecommerce.",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/RicardoGA18/ecommerce-express.git",

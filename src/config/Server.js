@@ -3,6 +3,7 @@ import { connect } from 'mongoose'
 import swaggerUi from 'swagger-ui-express'
 import swaggerDoc from './swagger.json'
 import cors from 'cors'
+import pkgjson from '../../package.json'
 /* Configure dotenv only for development and test environment */
 if(process.env.NODE_ENV !== 'production'){
   require('dotenv').config()
@@ -62,6 +63,17 @@ export default class Server {
     }))
   }
   routes(){
+    this.app.get('/', (req,res) => {
+      return res.status(200).json({
+        name: pkgjson.name,
+        description: pkgjson.description,
+        version: pkgjson.version,
+        repository: pkgjson.repository,
+        author: pkgjson.author,
+        license: pkgjson.license,
+        APIdocs: "https://computer-store-back.herokuapp.com/api/docs"
+      })
+    })
     this.app.use('/api/auth', authRoutes)
     this.app.use('/api/categories', categoryRoutes)
     this.app.use('/api/products', productRoutes)
