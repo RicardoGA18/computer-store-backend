@@ -1,7 +1,7 @@
 import express from 'express'
 import { connect } from 'mongoose'
 import swaggerUi from 'swagger-ui-express'
-import swaggerDoc from './swagger.json'
+import swaggerDoc from '../../swagger.json'
 import cors from 'cors'
 import pkgjson from '../../package.json'
 /* Configure dotenv only for development and test environment */
