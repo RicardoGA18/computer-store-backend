@@ -20,14 +20,14 @@ FIREBASE_CREDENTIALS_JSON=
 
 ## Scripts
 
- - `yarn start` : run the app in production mode
- - `yarn dev` : run the app in development mode
- - `yarn build` : compile the project using babel
- - `yarn clean` : remove the build directory
- - `yarn test` : run tests using jest
- - `yarn test:silent` : run tests without app console logs
- - `yarn test:detailed` : run tests with all console logs
- - `yarn test:watch` : run tests and keep watching
+ - `$ yarn start` : run the app in production mode
+ - `$ yarn dev` : run the app in development mode
+ - `$ yarn build` : compile the project using babel
+ - `$ yarn clean` : remove the build directory
+ - `$ yarn test` : run tests using jest
+ - `$ yarn test:silent` : run tests without app console logs
+ - `$ yarn test:detailed` : run tests with all console logs
+ - `$ yarn test:watch` : run tests and keep watching
 
 ## Environment variables
 ```
