@@ -3,7 +3,7 @@ import verifyTypes from '../../utils/verifyTypes'
 import { isOnlyLetters , isEmail } from '../../utils/regexValidations'
 import User from '../../models/User'
 
-const validateUpdateClient = async (req,res,next) => {
+const validateUpdateClient = (req,res,next) => {
   /* Verifying that the req.body contains the required fields */
   const requiredFields = ['name','lastName','email']
   const isValidKeys = verifyKeys(req.body,requiredFields)
@@ -60,28 +60,7 @@ const validateUpdateClient = async (req,res,next) => {
       message: 'El email es inválido'
     })
   }
-  /* Validating unique fields */
-  try {
-    const matchEmail = await User.findOne({email})
-    if(matchEmail){
-      const error = new Error(`${email} email already exists. The email must be unique`)
-      console.log(error)
-      return res.status(409).json({
-        success: false,
-        content: error.toString(),
-        message: `El email ${email} ya existe`
-      })
-    }
-    next()
-    return
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({
-      success: false,
-      content: error.toString(),
-      message: 'Error interno del servidor al validar registro de usuario'
-    })
-  }
+  next()
 }
 
 export default validateUpdateClient
