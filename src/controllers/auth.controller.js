@@ -81,3 +81,53 @@ export const signIn = async (req,res) => {
     })
   }
 }
+
+export const signInAdmin = async (req,res) => {
+  try {
+    /* Checking the admin exists */
+    const { email , password } = req.body
+    const admin = await User.findOne({ email: email , role: 'admin' })
+    if(!admin){
+      const error = new Error(`There is not an admin with the email ${email}`)
+      console.log(error)
+      return res.status(404).json({
+        success: false,
+        content: error.toString(),
+        message: `El email ${email} no se encuentra registrado`
+      })
+    }
+    /* Checking the password */
+    if(!User.comparePassword(password,admin.password)){
+      const error = new Error('Incorrect password')
+      console.log(error)
+      return res.status(403).json({
+        success: false,
+        content: error.toString(),
+        message: 'Contraseña incorrecta'
+      })
+    }
+    /* Creating a token */
+    const token = jwt.sign({adminId: admin._id},process.env.JWT_SECRET,{
+      expiresIn: 60 * 60 * 24 // 1 day
+    })
+    /* Removing the password */
+    const adminToServe = admin.toJSON()
+    delete adminToServe.password
+    /* Returnin the user with token */
+    return res.status(200).json({
+      success: true,
+      content: {
+        ...adminToServe,
+        token
+      },
+      message: 'Inicio de sesión exitoso'
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      success: false,
+      content: error.toString(),
+      message: 'Error interno del servidor al iniciar sesión'
+    })
+  }
+}

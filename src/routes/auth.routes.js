@@ -20,4 +20,10 @@ router.post(
   authController.signIn,
 )
 
+router.post(
+  '/sign-in-admin',
+  validateLogin,
+  authController.signInAdmin
+)
+
 export default router
