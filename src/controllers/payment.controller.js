@@ -152,3 +152,49 @@ export const getPurchasesByUserId = async (req,res) => {
     })
   }
 }
+
+export const getAllPurchases = async (req,res) => {
+  try {
+    const purchasesObject = await Purchase.find({})
+    const purchases = purchasesObject.map(obj => obj.toJSON())
+    return res.status(200).json({
+      success: true,
+      content: purchases,
+      message: 'Ventas obtenidas correctamente'
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      success: false,
+      content: error.toString(),
+      message: error.message
+    })
+  }
+}
+
+export const getPurchaseById = async (req,res) => {
+  try {
+    const { purchaseId } = req.params
+    const purchaseObject = await Purchase.findById(purchaseId)
+    const purchase = purchaseObject.toJSON()
+    return res.status(200).json({
+      success: true,
+      content: purchase,
+      message: 'Venta obtenida correctamente'
+    })
+  } catch (error) {
+    console.log(error)
+    if(error.path === '_id'){
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: "Id inválido"
+      })
+    }
+    return res.status(500).json({
+      success: false,
+      content: error.toString(),
+      message: error.message
+    })
+  }
+}

@@ -5,6 +5,7 @@ import * as paymentController from '../controllers/payment.controller'
 import validatePreference from '../middlewares/validation/validatePreference'
 import isLogged from '../middlewares/auth/isLogged'
 import isClient from '../middlewares/auth/isClient'
+import isAdmin from '../middlewares/auth/isAdmin'
 
 /* Routes config */
 const router = Router()
@@ -24,6 +25,18 @@ router.get(
   '/getPurchasesByUserId/:clientId',
   isClient,
   paymentController.getPurchasesByUserId
+)
+
+router.get(
+  '/getAllPurchases',
+  isAdmin,
+  paymentController.getAllPurchases
+)
+
+router.get(
+  '/getPurchaseById/:purchaseId',
+  isAdmin,
+  paymentController.getPurchaseById
 )
 
 export default router
