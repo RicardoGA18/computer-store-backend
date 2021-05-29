@@ -45,6 +45,10 @@ const PurchaseSchema = new Schema({
     required: true,
     min: 0,
   },
+  mercadoPagoId: {
+    type: String,
+    required: true,
+  },
   products: [PurchaseProductSchema],
 },{
   timestamps: {

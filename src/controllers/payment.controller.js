@@ -1,4 +1,5 @@
 import User from '../models/Product'
+import Purchase from '../models/Purchase'
 import mercadopago from 'mercadopago'
 
 export const createPreference = async (req,res) => {
@@ -82,13 +83,26 @@ export const createPreference = async (req,res) => {
   }
 }
 
-export const getNotifications = (req,res) => {
-  res.status(200)
-  console.log('Getting notifications')
-  console.log('By req.query')
-  console.log(req.query)
-  console.log('By req.body')
-  console.log(req.body)
-  console.log('In JSON form')
-  console.log(JSON.stringify(req.body))
+export const getNotifications = async (req,res) => {
+  try {
+    res.sendStatus(200)
+    console.log('Getting notifications')
+    console.log('By req.query')
+    console.log(req.query)
+    console.log('By req.body')
+    console.log(req.body)
+    const { action } = req.body
+    if(action !== 'payment.created'){
+      return
+    }
+    const { id } = req.body.data
+    const matchPurchase = await Purchase.findOne({mercadoPagoId: id})
+    if(matchPurchase){
+      return
+    }
+    const preferenceInfo = await mercadopago.payment.get(id)
+    console.log(preferenceInfo)
+  } catch (error) {
+    console.log(error)
+  }
 }
