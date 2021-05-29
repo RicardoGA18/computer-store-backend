@@ -240,7 +240,7 @@ export const deleteProductById = async (req, res) => {
     }
     /* Deleting the product and returning the product id */
     const { _id } = productObject.toJSON()
-    await Product.findOneAndDelete(productId)
+    await Product.findByIdAndDelete(productId)
     return res.status(200).json({
       success: true,
       content: {
@@ -371,10 +371,13 @@ export const uploadSlidesById = async (req,res) => {
     for(let url of deleteArray){
       oldSlides = oldSlides.filter(slide => slide !== url)
     }
-    const newSlides = [
+    let newSlides = [
       ...oldSlides,
       ...uploadedSlides,
     ]
+    if(!newSlides.length){
+      newSlides = ['https://firebasestorage.googleapis.com/v0/b/computer-store-a1f8e.appspot.com/o/assets%2FGroup%203.png?alt=media&token=520fa3d8-be24-4bb1-9109-027f322d389f']
+    }
     /* Returning the updated product */
     oldProduct.slides = newSlides
     const productObject = await oldProduct.save()

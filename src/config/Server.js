@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerDoc from '../../swagger.json'
 import cors from 'cors'
 import pkgjson from '../../package.json'
+import mercadopago from 'mercadopago'
 /* Configure dotenv only for development and test environment */
 if(process.env.NODE_ENV !== 'production'){
   require('dotenv').config()
@@ -13,6 +14,7 @@ import authRoutes from '../routes/auth.routes'
 import categoryRoutes from '../routes/categories.routes'
 import productRoutes from '../routes/products.routes'
 import clientRoutes from '../routes/clients.routes'
+import paymentRoutes from '../routes/payment.routes'
 
 export default class Server {
   constructor() {
@@ -31,6 +33,7 @@ export default class Server {
     if(process.env.NODE_ENV === 'development'){
       this.app.use(require('morgan')('dev'))
     }
+    this.mercadopago()
     this.routes()
     this.swagger()
   }
@@ -78,5 +81,11 @@ export default class Server {
     this.app.use('/api/categories', categoryRoutes)
     this.app.use('/api/products', productRoutes)
     this.app.use('/api/clients',clientRoutes)
+    this.app.use('/api/payments',paymentRoutes)
+  }
+  mercadopago() {
+    mercadopago.configure({
+      access_token: process.env.MP_ACCESS_TOKEN,
+    })
   }
 }

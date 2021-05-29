@@ -107,7 +107,7 @@ export const signInAdmin = async (req,res) => {
       })
     }
     /* Creating a token */
-    const token = jwt.sign({adminId: admin._id},process.env.JWT_SECRET,{
+    const token = jwt.sign({ userId : admin._id},process.env.JWT_SECRET,{
       expiresIn: 60 * 60 * 24 // 1 day
     })
     /* Removing the password */

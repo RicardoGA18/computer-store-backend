@@ -1,4 +1,5 @@
 import Category from '../models/Category'
+import Product from '../models/Product'
 import getUrlFromFile from '../utils/getUrlFromFile'
 
 export const createCategory = async (req,res) => {
@@ -146,7 +147,9 @@ export const deleteCategoryById = async (req,res) => {
         content: error.toString(),
         message: 'Categoría no encontrada'
       })
-    }
+    } 
+    /* Removing all products of the category */
+    await Product.deleteMany({categoryId: categoryId})  
     /* Deleting the category and returning the category id */
     const { _id } = categoryObject.toJSON()
     await Category.findByIdAndDelete(categoryId)

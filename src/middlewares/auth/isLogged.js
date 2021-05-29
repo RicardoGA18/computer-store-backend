@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import User from '../../models/User'
 
-const isAdmin = async (req,res,next) => {
+const isLogged = async (req,res,next) => {
   try {
     /* Verifiying that there is a token */
     const bearerToken = req.headers.authorization
@@ -28,10 +28,9 @@ const isAdmin = async (req,res,next) => {
         message: 'Token de acceso con usuario no existente'
       })
     }
-    /* Verifiyin the user have the admin role */
     const user = userObject.toJSON()
-    if(user.role !== 'admin'){
-      const error = new Error('Unauthorized. The user must be an admin')
+    if(!(user.role === 'client' || user.role === 'admin')){
+      const error = new Error('Unauthorized')
       console.log(error)
       return res.status(401).json({
         success: false,
@@ -70,6 +69,6 @@ const isAdmin = async (req,res,next) => {
       message: 'Error interno del servidor al validar token'
     })
   }
-}
+} 
 
-export default isAdmin
+export default isLogged
