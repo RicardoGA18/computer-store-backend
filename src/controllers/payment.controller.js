@@ -109,25 +109,25 @@ export const getNotifications = async (req,res) => {
       products: []
     }
     console.log('---------------------')
-    console.log(infoMP)
-    console.log('---------------------')
     console.log(infoMP.additional_info)
     console.log('---------------------')
     console.log(infoMP.additional_info.items)
     console.log('---------------------')
     console.log(newPurchase)
     console.log('---------------------')
-    // for(let product of infoMP.additional_info.items){
-    //   const newProduct = {
-    //     _id: product.id,
-    //     name: product.title,
-    //     img: product.picture_url,
-    //     price: product.unit_price,
-    //     amount: product.quantity,
-    //   }
-    //   newPurchase.products.push(newProduct)
-    // }
-    // console.log(newPurchase)
+    console.log(typeof infoMP.additional_info.items)
+    for(let product of infoMP.additional_info.items){
+      const newProduct = {
+        _id: product.id,
+        name: product.title,
+        img: product.picture_url,
+        price: product.unit_price,
+        amount: product.quantity,
+      }
+      newPurchase.products.push(newProduct)
+    }
+    console.log(newPurchase)
+    console.log('---------------------')
   } catch (error) {
     console.log(error)
   }
