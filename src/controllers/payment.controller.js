@@ -108,6 +108,13 @@ export const getNotifications = async (req,res) => {
       mercadoPagoId: infoMP.id,
       products: []
     }
+    console.log('---------------------')
+    console.log(infoMP)
+    console.log('---------------------')
+    console.log(infoMP.additional_info)
+    console.log('---------------------')
+    console.log(infoMP.additional_info.items)
+    console.log('---------------------')
     for(let product of infoMP.additional_info.items){
       const newProduct = {
         _id: product.id,
