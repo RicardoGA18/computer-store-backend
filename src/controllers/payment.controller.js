@@ -120,12 +120,35 @@ export const getNotifications = async (req,res) => {
       oldProdObject.stock = newStock
       await oldProdObject.save()
     }
-    const createdPurchaseObject = await Purchase.create(newPurchase)
-    const createdPurchase = createdPurchaseObject.toJSON()
-    console.log('---------------------------------------------------')
-    console.log(createdPurchase)
-    console.log('---------------------------------------------------')
+    await Purchase.create(newPurchase)
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const getPurchasesByUserId = async (req,res) => {
+  try {
+    const { userId } = req.params
+    const purchasesObject = await Purchase.find({userId})
+    const purchases = purchasesObject.map(p => p.toJSON())
+    return res.status(200).json({
+      success: true,
+      content: purchases,
+      message: 'Compras obtenidas correctamente'
+    })
+  } catch (error) {
+    console.log(error)
+    if(error.path === '_id'){
+      return res.status(400).json({
+        success: false,
+        content: error.toString(),
+        message: "Id inválido"
+      })
+    }
+    return res.status(500).json({
+      success: false,
+      content: error.toString(),
+      message: error.message
+    })
   }
 }
