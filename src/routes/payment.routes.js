@@ -21,7 +21,7 @@ router.post(
 )
 
 router.get(
-  '/getPurchasesByUserId/:userId',
+  '/getPurchasesByUserId/:clientId',
   isClient,
   paymentController.getPurchasesByUserId
 )
