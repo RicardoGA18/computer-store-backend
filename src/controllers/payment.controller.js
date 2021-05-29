@@ -1,5 +1,5 @@
-import User from '../models/Product'
 import Purchase from '../models/Purchase'
+import Product from '../models/Product'
 import mercadopago from 'mercadopago'
 
 export const createPreference = async (req,res) => {
@@ -112,6 +112,13 @@ export const getNotifications = async (req,res) => {
         amount: product.quantity,
       }
       newPurchase.products.push(newProduct)
+    }
+    for(let prod of newPurchase.products){
+      const oldProdObject = await Product.findById(prod._id)
+      const oldProduct = oldProdObject.toJSON()
+      const newStock = oldProduct.stock - prod.amount
+      oldProdObject.stock = newStock
+      await oldProdObject.save()
     }
     const createdPurchaseObject = await Purchase.create(newPurchase)
     const createdPurchase = createdPurchaseObject.toJSON()
