@@ -129,7 +129,7 @@ export const getNotifications = async (req,res) => {
 export const getPurchasesByUserId = async (req,res) => {
   try {
     const { clientId } = req.params
-    const purchasesObject = await Purchase.find({clientId})
+    const purchasesObject = await Purchase.find({userId: clientId})
     const purchases = purchasesObject.map(p => p.toJSON())
     return res.status(200).json({
       success: true,
