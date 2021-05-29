@@ -86,11 +86,11 @@ export const createPreference = async (req,res) => {
 export const getNotifications = async (req,res) => {
   try {
     res.sendStatus(200)
-    console.log('Getting notifications')
-    console.log('By req.query')
-    console.log(req.query)
-    console.log('By req.body')
-    console.log(req.body)
+    // console.log('Getting notifications')
+    // console.log('By req.query')
+    // console.log(req.query)
+    // console.log('By req.body')
+    // console.log(req.body)
     const { action } = req.body
     if(action !== 'payment.created'){
       return
@@ -101,7 +101,24 @@ export const getNotifications = async (req,res) => {
       return
     }
     const preferenceInfo = await mercadopago.payment.get(id)
-    console.log(preferenceInfo)
+    const { body:infoMP } = preferenceInfo
+    const newPurchase = {
+      userId: infoMP.external_reference,
+      totalAmount: infoMP.transaction_amount,
+      mercadoPagoId: infoMP.id,
+      products: []
+    }
+    for(let product of infoMP.additional_info.items){
+      const newProduct = {
+        _id: product.id,
+        name: product.title,
+        img: product.picture_url,
+        price: product.unit_price,
+        amount: product.quantity,
+      }
+      newPurchase.products.push(newProduct)
+    }
+    console.log(newPurchase)
   } catch (error) {
     console.log(error)
   }

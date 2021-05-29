@@ -18,12 +18,6 @@ const PurchaseProductSchema = new Schema({
     required: true,
     min: 0,
   },
-  discount: {
-    type: Number,
-    min: 0,
-    max: 100,
-    default: 0,
-  },
   amount: {
     type: Number,
     required: true,
